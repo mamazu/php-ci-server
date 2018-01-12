@@ -40,7 +40,12 @@ class GitHubAPIResponse{
   }
 
   public function secretMatches($gitSigniture, $key){
-    $generatedKey = 'sha1=' . hash_hmac('sha1', $key, $this->payload);
+    // Get raw payload
+    $payload = file_get_contents('php://input');
+    
+    // Calculate the hash
+    $myHash = hash_hmac('sha1', $payload, $key);
+    $generatedKey = 'sha1=' . $myHash;
 
     return $gitSigniture === $generatedKey;
   }

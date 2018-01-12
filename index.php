@@ -13,7 +13,7 @@ $config = json_decode(file_get_contents('config.json'));
 $apiResponse = new GitHubAPIResponse($_POST['payload']);
 $secretToken = getallheaders()['X-Hub-Signature'];
 
-if(!$apiResponse->secretMatches($secretToken, 'something')){
+if(!$apiResponse->secretMatches($secretToken, $config->secret_key)){
   http_response_code(401);
   echo 'The secret key does not match';
   die();

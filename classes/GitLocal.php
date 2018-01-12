@@ -29,7 +29,8 @@ class GitLocal{
     exec("git checkout $revisionNumber;"); // Checkout the latest revision
   }
 
-  public function fetch(string $repoName, $remote=null){
+  public function fetch(string $repoName, $remote=null)
+  {
     chdir($this->getLocalRepoPath($repoName));  // Go into the repo
     if($remote === null){
       $remote = '--all';
@@ -41,7 +42,7 @@ class GitLocal{
 
   private function getLocalRepoPath(string $repoName): string
   {
-    return $this->localPath. '/'.$repoName;
+    return $this->localPath. '/' . $repoName;
   }
 }
 ?>

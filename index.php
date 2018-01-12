@@ -31,10 +31,12 @@ $repoName = $apiResponse->getRepoName();
 $localGit = new GitLocal('/home/ci/Documents/GitRepos');
 
 $newRepo = $localGit->clone($apiResponse->getCloneUrl(), $repoName);
-if(!$newRepo){
+if($newRepo){
+  $localGit->checkout($repoName, $apiResponse->getCommit()->id);
+}else{
   $localGit->fetch($repoName);
 }
-$localGit->checkout($repoName, $apiResponse->getCommit()->id);
+
 ?>
 
 This is the CI working!

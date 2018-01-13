@@ -39,7 +39,7 @@ class GitHubAPIResponse{
     return null;
   }
 
-  public function secretMatches($gitSigniture, $key){
+  public static function secretMatches($gitSigniture, $key){
     // Get raw payload
     $payload = file_get_contents('php://input');
     

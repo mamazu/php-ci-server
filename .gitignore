@@ -1,1 +1,7 @@
-config.json
+# config file
+files/config.json
+
+# Job directory
+files/todo/*
+files/working/*
+files/output/*

@@ -3,51 +3,64 @@
 include 'classes/GitHubAPIResponse.php';
 include 'classes/GitLocal.php';
 include 'classes/CIBuilder.php';
+include 'classes/JobManager.php';
 
-function getNextCIJob(string $directory): string
-{
-  if(!file_exists($directory) || !is_dir($directory)){
-    return '';
-  }
+$BASEDIR = __DIR__;
 
-  // Getting files in queue
-  $nextFiles = array_diff(scandir($directory), ['.','..']);
-  if(count($nextFiles) > 0){
-    $fileName = $directory.'/'.$nextFiles[array_keys($nextFiles)[0]];
-    return file_get_contents($fileName);
-  }
-
-  return '';
+function echoMessage($message){
+  $timeStamp = date('Y-m-d H:i:s');
+  echo "[$timeStamp] $message\n";
 }
 
-$config = json_decode(file_get_contents('files/config.json'));
+// Check if the CI is currently working
+$jobManager = new JobManager($BASEDIR.'/files');
+if($jobManager->ciIsWorking()){
+  echoMessage('CI is currently busy. Please try again later.');
+  die();
+}
 
-$nextJob = getNextCIJob('todo');
-if($nextJob === ''){die();}
+if(!$jobManager->hasNextJob()){
+  echoMessage('There are no build jobs queued.');
+  die();
+}
+
+// Gets the next job
+$nextJobFileName = $jobManager->getNextJob();
+$nextJob = file_get_contents($nextJobFileName);
+$jobName = basename($nextJobFileName);
+
+$config = json_decode(file_get_contents($BASEDIR.'/files/config.json'));
 $apiResponse = new GitHubAPIResponse($nextJob);
 
 // Checks if the repo is allowed to be build
-if(!in_array($apiResponse->getFullRepoName(), $config->whitelisted_repos)){
-  http_response_code(401);
-  echo 'The repo is not whitelisted';
+if(!in_array($apiResponse->getFullRepoName(), $config->whitelisted_repos)){  
+  $jobManager->writeJobOutput('Repo is not whitelisted.', $jobName);
+  $jobManager->markDone($jobName);
   die();
 }
 
 $repoName = $apiResponse->getRepoName();
 // Clones the repository
-$localGit = new GitLocal('/home/ci/Documents/GitRepos');
+$localGit = new GitLocal($config->paths->git_directory);
 $newRepo = $localGit->clone($apiResponse->getCloneUrl(), $repoName);
-if($newRepo){
-  $localGit->checkout($repoName, $apiResponse->getCommit()->id);
-}else{
+
+if(!$newRepo) {
   $localGit->fetch($repoName);
 }
 
+$localGit->checkout($repoName, $apiResponse->getCommit()->id);
+
+echoMessage("Starting to compile build job $jobName");
+
 // Builds the tests
-$ciBuilder = new CIBuilder('/home/ci/Documents/Build', $repoName);
+$ciBuilder = new CIBuilder($config->paths->build_directory, $repoName);
 $ciResult = $ciBuilder->runBuildScript();
 
-file_put_contents('/var/www/html/files/ouput'.time().'.txt', join(PHP_EOL, $ciResult));
+$jobManager->writeJobOutput(join(PHP_EOL, $ciResult), $jobName);
+$success = $jobManager->markDone($jobName);
+if($success){
+  echoMessage("Successfully processed $jobName");
+}else{
+  echoMessage("Could not mark $jobName as done");
+}
 ?>
-
-This is the CI working!

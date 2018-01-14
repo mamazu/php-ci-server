@@ -6,7 +6,7 @@ class GitHubAPIResponse{
   }
 
   private function getData(string $index){
-    if(array_key_exists($index, $this->data))
+    if(property_exists($this->data, $index))
       return $this->data->$index;
     return NULL;
   }

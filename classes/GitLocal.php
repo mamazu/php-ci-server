@@ -25,19 +25,32 @@ class GitLocal{
 
   public function checkout(string $repoName, string $revisionNumber)
   {
+    $previousDirectory = getcwd();
+    
     chdir($this->getLocalRepoPath($repoName));  // Go into the repo
-    exec("git checkout $revisionNumber;"); // Checkout the latest revision
+    $output = [];
+    exec("git checkout $revisionNumber;", $ouput); // Checkout the latest revision
+
+    chdir($previousDirectory);
+    return $output;
   }
 
-  public function fetch(string $repoName, $remote=null)
+  public function fetch(string $repoName, $remote=null): array
   {
+    $previousDirectory = getcwd();
     chdir($this->getLocalRepoPath($repoName));  // Go into the repo
+    
     if($remote === null){
       $remote = '--all';
     }else{
       $remote = escapeshellargs($remote);
     }
-    exec("git fetch $remote;"); // Checkout the latest revision
+
+    $ouput = [];
+    exec("git fetch $remote;", $ouput); // Checkout the latest revision
+
+    chdir($previousDirectory);
+    return $ouput;
   }
 
   private function getLocalRepoPath(string $repoName): string

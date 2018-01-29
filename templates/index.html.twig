@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}CI Status page{% endblock %}
+
+{% block body %}
+    <h1 style="display:inline; margin-right:1em">Current Status</h1>
+    {{ block('cron_status') }}
+    <ul>
+        {% for status, count in summary %}
+            <li>{{status}}:
+                {{count}}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Previous Builds</h2>
+{% endblock body %}
+
+{% block cron_status%}
+    <span style="color:red">manual</span>
+{% endblock %}

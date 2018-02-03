@@ -3,19 +3,23 @@
 {% block title %}CI Status page{% endblock %}
 
 {% block body %}
-    <h1 style="display:inline; margin-right:1em">Current Status</h1>
-    {{ block('cron_status') }}
-    <ul>
-        {% for status, count in summary %}
-            <li>{{status}}:
-                {{count}}</li>
-        {% endfor %}
-    </ul>
+    <div class="pannel">
+        <h2 style="display:inline; margin-right:1em">Current Status</h2>
+        {{ block('cron_status') }}
+        <ul>
+            {% for status, count in summary %}
+                <li>{{status}}:
+                    {{count}}</li>
+            {% endfor %}
+        </ul>
+    </div>
 
-    <h2>Previous Builds</h2>
-    {% include 'macros/build_table.html.twig' with build_jobs %}
+    <div class="pannel">
+        <h2>Previous Builds</h2>
+        {% include 'build_table.html.twig' with build_jobs %}
+    </div>
 {% endblock body %}
 
 {% block cron_status%}
-    <span style="color:red">manual</span>
+    <span style="color:rgb(255, 20, 20)" title="There is no cronjob set up to start the build automatically">manual</span>
 {% endblock %}

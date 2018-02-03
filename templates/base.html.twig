@@ -5,7 +5,11 @@
         <title>
             {% block title %}Welcome!{% endblock %}
         </title>
-        {% block stylesheets %}{% endblock %}
+        <style type="text/css">
+            {% block stylesheets %}
+                {% include "css/main.css" %}
+            {% endblock %}
+        </style>
     </head>
     <body>
         {% block body %}{% endblock %}

@@ -15,22 +15,32 @@
     <a href="https://github.com/{{repoName}}/commit/{{commitId}}" target="_blank">{{commitId}}</a>
 {% endmacro %}
 
+{% macro build_cancel_link(build_job) %}
+    <a href="#">Cancel</a>
+{% endmacro %}
+
 {% import _self as table %}
 
-<table summary="Table of builds and their status" border="1">
+<table summary="Table of builds and their status" id="buildtable">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Repository</th>
             <th>Commit-ID</th>
             <th>Status</th>
+            <th>Cancel</th>
         </tr>
     </thead>
     <tbody>
         {% for build_job in build_jobs %}
             <tr>
+                <td>{{ build_job.id }}</td>
                 <td>{{ table.build_repo_link(build_job.repositoryName) }}</td>
                 <td>{{ table.build_commit_link(build_job.repositoryName, build_job.commitId) }}</td>
                 <td>{{ table.print_build_state(build_job.states) }}</td>
+                <td class="job_cancel">
+                    {{ table.build_cancel_link(build_job.id) }}
+                </td>
             </tr>
         {% endfor %}
     </tbody>

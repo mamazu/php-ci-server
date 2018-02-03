@@ -32,8 +32,16 @@ class GithubController extends Controller
 	public function githubHook(Request $request) : Response
 	{
 		$payload = $request->request->get('payload');
+
 		if ($payload === null) {
 			return new Response('This is not a GitHub request');
+		}
+
+		$this->githubService->setPayload($payload);
+
+		$signiture = $request->server->get('HTTP_X_HUB_SIGNATURE');
+		if (!$this->githubService->validateSigniture($signiture)) {
+			return new Response('Wrong signiture', 401);
 		}
 
 		if ($this->processRequest($payload)) {
@@ -45,7 +53,6 @@ class GithubController extends Controller
 
 	private function processRequest(string $payload) : bool
 	{
-		$this->githubService->setPayload($payload);
 		$commitId = $this->githubService->getCommitId();
 		$cloneUrl = $this->githubService->getCloneUrl();
 

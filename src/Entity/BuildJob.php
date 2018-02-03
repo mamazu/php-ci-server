@@ -3,43 +3,72 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\BuildJobRepository")
- */
-class BuildJob
+class BuildJob implements BuildJobInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var string $commitI
-     * @ORM\Column(type="string", length=40)
-     */
+    /** @var string */
     private $commitId;
 
-    /**
-     * @var string $repositoryName
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
     private $repositoryName;
 
-    /**
-     * @ORM\Column(type="string", length=10)
-     */
-    private $status;
+    /** @var BuildStateChanges[] */
+    private $states;
 
     public function __construct(
         string $commitId,
-        string $repoName,
-        $status = null
+        string $repoName
     ) {
         $this->commitId = $commitId;
         $this->repositoryName = $repoName;
-        $this->status = is_null($status) ? 'pending' : $status;
+
+        $this->states = new ArrayCollection();
+        $this->initialize();
+    }
+
+    private function initialize()
+    {
+        if ($this->states->count() === 0) {
+            $pendingState = new BuildState($this, BuildJobInterface::STATUS_PENDING);
+            $this->states->add($pendingState);
+        }
+    }
+
+    public function getRepositoryName() : string
+    {
+        return $this->repositoryName;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getCommitId() : string
+    {
+        return $this->commitId;
+    }
+
+    public function getState() : BuildState
+    {
+        return $this->states->last();
+    }
+
+    public function getStates() : array
+    {
+        return $this->states->toArray();
+    }
+
+    public function getAllStates() : array
+    {
+        return [
+            BuildJobInterface::STATUS_PENDING,
+            BuildJobInterface::STATUS_INPROGESS,
+            BuildJobInterface::STATUS_DONE
+        ];
     }
 }

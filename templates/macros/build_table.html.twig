@@ -1,0 +1,28 @@
+{% macro print_build_state(build_state) %}
+    <ul>
+        {% for state in build_state %}
+            <li>{{ state.name }}:
+                {{ state.time|date('Y-m-d H:i:s') }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% import _self as table %}
+<table summary="Table of builds and their status" border="1">
+    <thead>
+        <tr>
+            <th>Repository</th>
+            <th>Commit-ID</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for build_job in build_jobs %}
+            <tr>
+                <td>{{ build_job.repositoryName }}</td>
+                <td>{{ build_job.commitId }}</td>
+                <td>{{ table.print_build_state(build_job.states) }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

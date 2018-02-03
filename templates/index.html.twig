@@ -13,6 +13,7 @@
     </ul>
 
     <h2>Previous Builds</h2>
+    {% include 'macros/build_table.html.twig' with build_jobs %}
 {% endblock body %}
 
 {% block cron_status%}

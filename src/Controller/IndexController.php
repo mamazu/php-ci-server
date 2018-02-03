@@ -22,9 +22,19 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $summary = $this->repo->getSummary();
+        $allJobs = $this->repo->findAll();
+        $summary = [];
+        foreach ($allJobs as $buildJob) {
+            $state = $buildJob->getState()->getName();
+            if (!isset($summary[$state])) {
+                $summary[$state] = 0;
+            }
+            $summary[$state]++;
+        }
+
         return $this->render('index.html.twig', [
-            'summary' => $summary
+            'summary' => $summary,
+            'build_jobs' => $allJobs
         ]);
     }
 }

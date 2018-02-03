@@ -7,7 +7,16 @@
     </ul>
 {% endmacro %}
 
+{% macro build_repo_link(repoName) %}
+    <a href="https://github.com/{{repoName}}" target="_blank">{{repoName}}</a>
+{% endmacro %}
+
+{% macro build_commit_link(repoName, commitId) %}
+    <a href="https://github.com/{{repoName}}/commit/{{commitId}}" target="_blank">{{commitId}}</a>
+{% endmacro %}
+
 {% import _self as table %}
+
 <table summary="Table of builds and their status" border="1">
     <thead>
         <tr>
@@ -19,8 +28,8 @@
     <tbody>
         {% for build_job in build_jobs %}
             <tr>
-                <td>{{ build_job.repositoryName }}</td>
-                <td>{{ build_job.commitId }}</td>
+                <td>{{ table.build_repo_link(build_job.repositoryName) }}</td>
+                <td>{{ table.build_commit_link(build_job.repositoryName, build_job.commitId) }}</td>
                 <td>{{ table.print_build_state(build_job.states) }}</td>
             </tr>
         {% endfor %}

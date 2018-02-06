@@ -1,56 +1,78 @@
 * {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
-a, a:visited, a:hover {
-	color: rgb(0, 183, 255);
+a,
+a:visited,
+a:hover {
+  color: rgb(0, 183, 255);
 }
 
-body{
-	background-color: black;
-	color: white;
-	font-family: sans-serif;
+body {
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
 }
 
-ul li{
-	margin-left: 1em;
+ul li {
+  margin-left: 1em;
 }
 
 /** Styling the pannel */
-div.pannel{
-	background: rgba(255, 255, 255, .2);
-	margin: 2em;
-	padding: 1em;
-	border: 1px solid silver;
-	border-radius: 1em
+div.pannel {
+  background: rgba(255, 255, 255, 0.2);
+  margin: 2em;
+  padding: 1em;
+  border: 1px solid silver;
+  border-radius: 1em;
 }
 
-div.pannel h1, div.pannel h2{
-	text-align: center;
-	padding: 0.2em 0;
+div.pannel h1,
+div.pannel h2 {
+  text-align: center;
+  padding: 0.2em 0;
 }
 
 /* Styling the build table */
-#buildtable{
-	width: 100%;
-	box-sizing: border-box;
-	border-collapse: collapse;
+#buildtable {
+  width: 100%;
+  box-sizing: border-box;
+  border-collapse: collapse;
 }
 
-#buildtable td, #buildtable th{
-	border: 1px solid white;
+#buildtable td,
+#buildtable th {
+  border: 1px solid white;
 }
 
-#buildtable th{
-	padding: 1em;
+#buildtable th {
+  padding: 1em;
 }
 
-#buildtable td{
-	padding: .2em;
+#buildtable td {
+  padding: 0.2em;
 }
 
-#buildtable td.job_cancel{
-	text-align: center;
+#buildtable td.job_cancel {
+  text-align: center;
 }
+
+#buildtable tr.state-pending {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#buildtable tr.state-inprogress {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+#buildtable tr.state-inprogress a,
+#buildtable tr.state-inprogress a:visited,
+#buildtable tr.state-complete a,
+#buildtable tr.state-complete a:visited {
+  color: blue;
+}
+
+#buildtable tr.state-complete {
+  background-color: rgba(0, 255, 0, 0.5);
 }

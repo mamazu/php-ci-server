@@ -2,7 +2,7 @@
     <ul>
         {% for state in build_state %}
             <li>{{ state.name }}:
-                {{ state.time|date('Y-m-d H:i:s') }}</li>
+                {{ state.time|date('d.m-H:i:s') }}</li>
         {% endfor %}
     </ul>
 {% endmacro %}
@@ -33,7 +33,7 @@
     </thead>
     <tbody>
         {% for build_job in build_jobs %}
-            <tr>
+            <tr class="state-{{ build_job.state.name }}">
                 <td>{{ build_job.id }}</td>
                 <td>{{ table.build_repo_link(build_job.repositoryName) }}</td>
                 <td>{{ table.build_commit_link(build_job.repositoryName, build_job.commitId) }}</td>

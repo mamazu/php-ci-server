@@ -5,7 +5,7 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use App\Services\GitHubService;
+use App\Services\GitHubWebHookParser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BuildJob;
@@ -15,15 +15,15 @@ class GithubController extends Controller
 	/** @var EntityManagerInterface $entityManager */
 	private $entityManager;
 
-	/** @var GitHubService $gitHubService */
-	private $githubService;
+	/** @var GitHubWebHookParser $gitHubWebHookService */
+	private $gitHubWebHookService;
 
 	public function __construct(
 		EntityManagerInterface $entityManager,
-		GitHubService $githubService
+		GitHubWebHookParser $gitHubWebHookService
 	) {
 		$this->entityManager = $entityManager;
-		$this->githubService = $githubService;
+		$this->gitHubWebHookService = $gitHubWebHookService;
 	}
 
 	/**
@@ -37,10 +37,10 @@ class GithubController extends Controller
 			return new Response('This is not a GitHub request');
 		}
 
-		$this->githubService->setPayload($payload);
+		$this->gitHubWebHookService->setPayload($payload);
 
 		$signiture = $request->server->get('HTTP_X_HUB_SIGNATURE');
-		if (!$this->githubService->validateSigniture($signiture)) {
+		if (!$this->gitHubWebHookService->validateSigniture($signiture)) {
 			return new Response('Wrong signiture', 401);
 		}
 
@@ -53,8 +53,8 @@ class GithubController extends Controller
 
 	private function processRequest(string $payload) : bool
 	{
-		$commitId = $this->githubService->getCommitId();
-		$cloneUrl = $this->githubService->getCloneUrl();
+		$commitId = $this->gitHubWebHookService->getCommitId();
+		$cloneUrl = $this->gitHubWebHookService->getCloneUrl();
 
 		if (is_null($commitId) || is_null($cloneUrl)) {
 			return false;

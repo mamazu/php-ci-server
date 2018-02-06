@@ -16,13 +16,23 @@ class BuildJobRepository extends ServiceEntityRepository
 
     public function getNextBuildJob()
     {
-        return $this->createQueryBuilder('b')
-            ->select('b')
-            ->innerJoin('b.states', 's')
-            ->orderBy('s.time', 'ASC')
-            ->andWhere('s.name = :pending')
-            ->setParameter('pending', 'pending')
-            ->getQuery()
-            ->getOneOrNullResult();
+        $statement = $this->_em->getConnection()->prepare('
+        SELECT * 
+        FROM (
+            SELECT
+                MAX(id) AS id,
+                build_job_id,
+                `name` AS stateName
+            FROM
+                `build_state`
+            GROUP BY
+                build_job_id
+        ) state
+        WHERE stateName = :stateName
+        LIMIT 1;
+        ');
+        $statement->execute([':stateName' => 'pending']);
+        $result = $statement->fetchAll();
+        return count($result) > 0 ? $this->find($result[0]['build_job_id']) : null;
     }
 }

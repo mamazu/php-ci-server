@@ -42,13 +42,27 @@ class BuildJobStarterCommand extends Command
 	{
 		try {
 			$buildJob = $this->getBuildJob($input->getArgument('jobOrCommitId'));
+			if ($buildJob === null) {
+				$output->writeln('info', 'The ci is empty');
+			} else {
+				$this->jobBuilder->build($buildJob);
+			}
 		} catch (EntityNotFoundException $e) {
 			$output->writeln('Could not find build job to execute.');
 		}
-
 	}
 
-	private function getBuildJob($identifier) : BuildJob
+	/**
+	 * Gets the next build job to execute
+	 * 
+	 * @param $identifier
+	 * 		If the $identifier is null, it will get the next build job based on the build job queue
+	 * 		If the $identifier is an integer then it will find the build job with the id and build it
+	 * 		otherwise it will look for a commit id with the content of the parameter
+	 * 
+	 * @return BuildJob|null 
+	 */
+	private function getBuildJob($identifier = null)
 	{
 		if ($identifier === null) {
 			return $this->buildJobRepository->getNextBuildJob();

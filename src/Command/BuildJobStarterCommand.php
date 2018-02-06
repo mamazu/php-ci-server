@@ -10,7 +10,9 @@ use App\Repository\BuildJobRepository;
 use Exception;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Entity\BuildJob;
-use App\Services\JobBuilderInterface;
+use App\Entity\BuildJobInterface;
+use App\Services\LocalBuilding\JobBuilderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BuildJobStarterCommand extends Command
 {
@@ -20,13 +22,18 @@ class BuildJobStarterCommand extends Command
 	/** @var JobBuilderInterface */
 	private $jobBuilder;
 
+	/** @var EntityManagerInterface */
+	private $entityManager;
+
 	public function __construct(
 		BuildJobRepository $buildJobRepository,
-		JobBuilderInterface $jobBuilder
+		JobBuilderInterface $jobBuilder,
+		EntityManagerInterface $entityManager
 	) {
 		parent::__construct(null);
 		$this->buildJobRepository = $buildJobRepository;
 		$this->jobBuilder = $jobBuilder;
+		$this->entityManager = $entityManager;
 	}
 
 	protected function configure()
@@ -45,6 +52,8 @@ class BuildJobStarterCommand extends Command
 			if ($buildJob === null) {
 				$output->writeln('info', 'The ci is empty');
 			} else {
+				$buildJob->setState(BuildJobInterface::STATUS_INPROGRESS);
+				$this->entityManager->flush();
 				$this->jobBuilder->build($buildJob);
 			}
 		} catch (EntityNotFoundException $e) {

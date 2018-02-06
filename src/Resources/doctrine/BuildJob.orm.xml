@@ -8,6 +8,9 @@
             <field name="commitId" length="40" />
             <field name="repositoryName" />
             <one-to-many field="states" target-entity="App\Entity\BuildState" mapped-by="buildJob">
+                  <cascade>
+                        <cascade-persist />
+                  </cascade>
                   <order-by>
                         <order-by-field name="time" direction="ASC" />
                   </order-by>

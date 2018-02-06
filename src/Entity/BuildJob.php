@@ -63,11 +63,21 @@ class BuildJob implements BuildJobInterface
         return $this->states->toArray();
     }
 
+    public function setState(string $state) : bool
+    {
+        if (!in_array($state, $this->getAllStates())) {
+            return false;
+        }
+
+        $this->states->add(new BuildState($this, $state));
+        return true;
+    }
+
     public function getAllStates() : array
     {
         return [
             BuildJobInterface::STATUS_PENDING,
-            BuildJobInterface::STATUS_INPROGESS,
+            BuildJobInterface::STATUS_INPROGRESS,
             BuildJobInterface::STATUS_DONE
         ];
     }

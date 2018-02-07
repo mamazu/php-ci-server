@@ -13,21 +13,51 @@ class LocalGit implements LocalGitInterface
 
 	public function has(string $repoName)
 	{
-		$this->rootDir . DIRECTORY_SEPARATOR . base64encode($repoName);
+		return file_exists($this->getRepositoryPath($repoName));
 	}
 
 	public function clone(string $repoURL) : bool
 	{
-		return false;
+		$previousDirectory = getcwd();
+		chdir($this->getRepositoryPath());
+
+		list($ouput, $exitCode) = $this->executeCommandWithOutput("git clone $repoURL .");
+
+		chdir($previousDirectory);
+		return $exitCode === 0;
 	}
 
 	public function fetch() : bool
 	{
-		return false;
+		$previousDirectory = getcwd();
+		chdir($this->getRepositoryPath());
+
+		list($ouput, $exitCode) = $this->executeCommandWithOutput("git fetch -a");
+
+		chdir($previousDirectory);
+		return $exitCode === 0;
 	}
 
 	public function checkout(string $revisionNumber) : bool
 	{
-		return false;
+		$previousDirectory = getcwd();
+		chdir($this->getRepositoryPath());
+
+		list($ouput, $exitCode) = $this->executeCommandWithOutput("git checkout $revisionNumber");
+
+		chdir($previousDirectory);
+		return $exitCode === 0;
+	}
+
+	private function executeCommandWithOutput(string $command) : array
+	{
+		$output = [];
+		$return_var = 1;
+		exec($command, $output, $return_var);
+	}
+
+	private function getRepositoryPath(string $repositoryName) : string
+	{
+		return $this->rootDir . DIRECTORY_SEPARATOR . base64encode($repoName);
 	}
 }

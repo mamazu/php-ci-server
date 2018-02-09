@@ -12,7 +12,7 @@ interface VCSRepositoryValidator
 	 * 
 	 * @throws GitValidationException
 	 */
-	public function validateRepositoryURL(string $url) : void;
+	public function validateRepositoryURL(string $url);
 
 	/**
 	 * Validates a given revision number and checks if this a valid revision. If it is not valid, it throws an error.
@@ -21,5 +21,5 @@ interface VCSRepositoryValidator
 	 * 
 	 * @throws InvalidRevisionException
 	 */
-	public function validateRevisionNumber(string $revisionNumber) : void;
+	public function validateRevisionNumber(string $revisionNumber);
 }

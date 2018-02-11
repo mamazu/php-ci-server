@@ -21,3 +21,6 @@
 ###< symfony/web-server-bundle ###
 
 .idea
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###

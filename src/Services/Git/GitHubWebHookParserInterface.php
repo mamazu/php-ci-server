@@ -8,13 +8,25 @@
 
 namespace App\Services\Git;
 
+use App\Exceptions\InvalidPayloadException;
+
 interface GitHubWebHookParserInterface
 {
+    /**
+     * Sets the payload for the parser.
+     * If the payload is invalid it throws an InvalidPayloadException
+     *
+     * @param string $payload
+     *
+     * @return void
+     *
+     * @throws InvalidPayloadException
+     */
     public function setPayload(string $payload);
 
     public function getCommitId();
 
     public function getCloneUrl();
 
-    public function validateSigniture(string $signiture): bool;
+    public function validateSigniture(string $signature): bool;
 }

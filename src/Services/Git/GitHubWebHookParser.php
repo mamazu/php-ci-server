@@ -1,52 +1,70 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace App\Services\Git;
 
-class GitHubWebHookParser
+use App\Exceptions\InvalidPayloadException;
+use stdClass;
+
+class GitHubWebHookParser implements GitHubWebHookParserInterface
 {
-	/** @var stdClass $this->data */
-	private $data;
+    /** @var stdClass $data*/
+    private $data;
 
-	/** @var string $key */
-	private $key;
+    /** @var string $key */
+    private $key;
 
-	public function __construct(string $key)
-	{
-		$this->key = $key;
-	}
+    /** {@inheritdoc} */
+    public function __construct(string $key)
+    {
+        $this->key = $key;
+    }
 
-	public function setPayload(string $payload)
-	{
-		$this->data = json_decode($payload);
-	}
+    /** {@inheritdoc} */
+    public function setPayload(string $payload)
+    {
+        if ($payload === null) return;
 
-	private function getProperty($object, string $property)
-	{
-		if (property_exists($object, $property)) {
-			return $object->$property;
-		}
-		return null;
-	}
+        $payloadObject = json_decode($payload);
 
-	public function getCommitId()
-	{
-		$commit = $this->getProperty($this->data, 'head_commit');
-		return is_null($commit) ? null : $this->getProperty($commit, 'id');
-	}
+        if ($payloadObject === null) {
+            throw new InvalidPayloadException('The payload is not valid json');
+        }
 
-	public function getCloneUrl()
-	{
-		$repo = $this->getProperty($this->data, 'repository');
-		return is_null($repo) ? null : $this->getProperty($repo, 'clone_url');
-	}
+        $this->data = $payloadObject;
+    }
 
-	public function validateSigniture(string $signiture) : bool
-	{
-		$rawData = file_get_contents('php://input');
-		$expectedSigniture = 'sha1=' . hash_hmac('sha1', $rawData, $this->key);
-		return $signiture === $expectedSigniture;
-	}
+    /** {@inheritdoc} */
+    private function getProperty($object, string $property)
+    {
+        if (property_exists($object, $property)) {
+            return $object->$property;
+        }
+        return null;
+    }
+
+    /** {@inheritdoc} */
+    public function getCommitId()
+    {
+        $commit = $this->getProperty($this->data, 'head_commit');
+        return is_null($commit) ? null : $this->getProperty($commit, 'id');
+    }
+
+    /** {@inheritdoc} */
+    public function getCloneUrl()
+    {
+        $repo = $this->getProperty($this->data, 'repository');
+        return is_null($repo) ? null : $this->getProperty($repo, 'clone_url');
+    }
+
+    /** {@inheritdoc} */
+    public function validateSigniture(string $signature): bool
+    {
+        $rawData           = file_get_contents('php://input');
+        $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $this->key);
+        return $signature === $expectedSignature;
+    }
 }
+
 ?>

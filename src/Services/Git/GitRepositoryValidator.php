@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace App\Services\Git;
 
+use App\Exceptions\InvalidRepositoryURLException;
+use App\Exceptions\InvalidRevisionException;
 use App\Services\VCSRepositoryValidator;
 
 
@@ -20,9 +22,9 @@ class GitRepositoryValidator implements VCSRepositoryValidator
 			$regExp = '/^http(s)?:\/\/[^\/]+\/[^\/]+\/[^\/]+.git$/';
 		}
 
-		$matches = preg_match($regExp);
+		$matches = preg_match($regExp, $url);
 		if ($matches !== 1) {
-			throw new InvalidRepositoryURLException();
+			throw new InvalidRepositoryURLException($url);
 		}
 	}
 
@@ -33,7 +35,7 @@ class GitRepositoryValidator implements VCSRepositoryValidator
 		$isAlphaNumerical = preg_match('/^[a-z0-9]+$/', $revisionNumber) === 1;
 
 		if (!$lengthMatches || !$isAlphaNumerical) {
-			throw new InvalidRevisionException();
+			throw new InvalidRevisionException($revisionNumber);
 		}
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\Git\GitHubWebHookParserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,12 @@ class GithubController extends Controller
 	/** @var EntityManagerInterface $entityManager */
 	private $entityManager;
 
-	/** @var GitHubWebHookParser $gitHubWebHookService */
+    /** @var GitHubWebHookParserInterface $gitHubWebHookService */
 	private $gitHubWebHookService;
 
 	public function __construct(
-		EntityManagerInterface $entityManager,
-		GitHubWebHookParser $gitHubWebHookService
+        EntityManagerInterface $entityManager,
+        GitHubWebHookParserInterface $gitHubWebHookService
 	) {
 		$this->entityManager = $entityManager;
 		$this->gitHubWebHookService = $gitHubWebHookService;

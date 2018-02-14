@@ -5,6 +5,7 @@ declare (strict_types=1);
 namespace App\Services\Git;
 
 use App\Exceptions\InvalidPayloadException;
+use App\Services\PHPStreamsInterface;
 use stdClass;
 
 class GitHubWebHookParser implements GitHubWebHookParserInterface
@@ -12,13 +13,11 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
     /** @var stdClass $data*/
     private $data;
 
-    /** @var string $key */
-    private $key;
+    /** @var PHPStreamsInterface */
+    private $streams;
 
-    /** {@inheritdoc} */
-    public function __construct(string $key)
-    {
-        $this->key = $key;
+    public function __construct(PHPStreamsInterface $streams) {
+        $this->streams = $streams;
     }
 
     /** {@inheritdoc} */
@@ -59,10 +58,11 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
     }
 
     /** {@inheritdoc} */
-    public function validateSigniture(string $signature): bool
+    public function validateSignature(string $key, string $signature): bool
     {
-        $rawData           = file_get_contents('php://input');
-        $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $this->key);
+        $rawData           = $this->streams->getInput();
+        $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $key);
+
         return $signature === $expectedSignature;
     }
 }

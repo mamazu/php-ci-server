@@ -24,9 +24,27 @@ interface GitHubWebHookParserInterface
      */
     public function setPayload(string $payload);
 
+    /**
+     * Gets the id of the revision that has been pushed
+     *
+     * @return string|null
+     */
     public function getCommitId();
 
+    /**
+     * Gets the url to clone the repository
+     *
+     * @return string|null
+     */
     public function getCloneUrl();
 
+    /**
+     * Checks if the signature that was provided with the request is valid
+     *
+     * @param string $key
+     * @param string $signature
+     *
+     * @return bool
+     */
     public function validateSignature(string $key, string $signature): bool;
 }

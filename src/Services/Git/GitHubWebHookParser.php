@@ -59,7 +59,7 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
     }
 
     /** {@inheritdoc} */
-    public function validateSigniture(string $signature): bool
+    public function validateSignature(string $signature): bool
     {
         $rawData           = file_get_contents('php://input');
         $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $this->key);

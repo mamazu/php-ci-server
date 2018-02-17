@@ -28,5 +28,5 @@ interface GitHubWebHookParserInterface
 
     public function getCloneUrl();
 
-    public function validateSigniture(string $signature): bool;
+    public function validateSignature(string $signature): bool;
 }

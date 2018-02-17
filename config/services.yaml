@@ -29,6 +29,3 @@ services:
 
     App\Services\Git\GitHubWebHookParser:
         arguments: ['abc']
-
-    App\Services\LocalBuilding\LocalGit:
-        arguments: ['/home/www-data/Documents']

@@ -5,7 +5,7 @@ namespace App\Entity;
 
 use App\Services\VCSRepositoryValidatorInterface;
 
-class VCSRepository implements VSCRepositoryInterface
+class VCSRepository implements VCSRepositoryInterface
 {
 	/** @var string */
 	private $cloneURL;

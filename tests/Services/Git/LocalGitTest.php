@@ -50,7 +50,7 @@ class LocalGitTest extends TestCase
 	public function dataHasRepository() : array
 	{
 		return [
-			'empty name' => ['_empty'],
+			'empty name' => [''],
 			'some name' => ['test_abc'],
 			'a real repo name' => ['mamazu/repo-test'],
 		];

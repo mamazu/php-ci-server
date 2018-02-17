@@ -12,9 +12,7 @@ interface BuildJobInterface
 
 	public function getId();
 
-	public function getRepositoryName() : string;
-
-	public function getCommitId() : string;
+	public function getBuildJobRepository() : VCSRepositoryInterface;
 
 	public function getState() : BuildState;
 }

@@ -18,7 +18,7 @@ class JobBuilder implements JobBuilderInterface
 
 	public function build(BuildJobInterface $buildJob) : bool
 	{
-		return false;
+		$this->prepareSourceCode($buildJob->getRepository());
 	}
 
 	private function prepareSourceCode(VCSRepositoryInterface $repository)
@@ -28,7 +28,7 @@ class JobBuilder implements JobBuilderInterface
 		} else {
 			$this->gitInterface->clone();
 		}
-		
+
 		$this->gitInterface->checkout();
 	}
 }

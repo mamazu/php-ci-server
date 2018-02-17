@@ -4,8 +4,9 @@ declare (strict_types = 1);
 
 namespace App\Services\Git;
 
-use App\Exceptions\InvalidRepositoryURLException;
-use App\Exceptions\InvalidRevisionException;
+use App\Exception \{
+	InvalidRepositoryURLException, InvalidRevisionException
+};
 use App\Services\VCSRepositoryValidatorInterface;
 
 

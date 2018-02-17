@@ -5,7 +5,7 @@ namespace App\Entity;
 
 use App\Services\VCSRepositoryValidatorInterface;
 
-use App\Exceptions\{InvalidRepositoryURLException, InvalidRevisionException};
+use App\Exception\{InvalidRepositoryURLException, InvalidRevisionException};
 
 class VCSRepository implements VCSRepositoryInterface
 {

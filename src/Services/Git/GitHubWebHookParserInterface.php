@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: mamazu
@@ -8,7 +9,7 @@
 
 namespace App\Services\Git;
 
-use App\Exceptions\InvalidPayloadException;
+use App\Exception\InvalidPayloadException;
 
 interface GitHubWebHookParserInterface
 {
@@ -28,5 +29,5 @@ interface GitHubWebHookParserInterface
 
     public function getCloneUrl();
 
-    public function validateSignature(string $signature): bool;
+    public function validateSignature(string $signature) : bool;
 }

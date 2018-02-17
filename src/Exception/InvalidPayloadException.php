@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: mamazu
@@ -6,7 +7,7 @@
  * Time: 18:50
  */
 
-namespace App\Exceptions;
+namespace App\Exception;
 
 
 use Exception;

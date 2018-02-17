@@ -2,7 +2,7 @@
 
 namespace App\Tests\Services\Git;
 
-use App\Exceptions\InvalidPayloadException;
+use App\Exception\InvalidPayloadException;
 use App\Services\Git\GitHubWebHookParser;
 use App\Services\Git\GitHubWebHookParserInterface;
 use PHPUnit\Framework\TestCase;

@@ -1,10 +1,10 @@
 <?php
 
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Services\Git;
 
-use App\Exceptions\InvalidPayloadException;
+use App\Exception\InvalidPayloadException;
 use stdClass;
 
 class GitHubWebHookParser implements GitHubWebHookParserInterface
@@ -59,9 +59,9 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
     }
 
     /** {@inheritdoc} */
-    public function validateSignature(string $signature): bool
+    public function validateSignature(string $signature) : bool
     {
-        $rawData           = file_get_contents('php://input');
+        $rawData = file_get_contents('php://input');
         $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $this->key);
         return $signature === $expectedSignature;
     }

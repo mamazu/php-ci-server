@@ -3,8 +3,9 @@ declare (strict_types = 1);
 
 namespace App\Services;
 
-use App\Exceptions\InvalidRevisionException;
-use App\Exceptions\InvalidRepositoryURLException;
+use App\Exception \{
+	InvalidRevisionException, InvalidRepositoryURLException
+};
 
 interface VCSRepositoryValidatorInterface
 {

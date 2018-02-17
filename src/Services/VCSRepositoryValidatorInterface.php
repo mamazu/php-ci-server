@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace App\Services;
 
-interface VCSRepositoryValidator
+interface VCSRepositoryValidatorInterface
 {
 	/**
 	 * Validates a given url and checks if this a repository. If it is not valid, it throws an error.

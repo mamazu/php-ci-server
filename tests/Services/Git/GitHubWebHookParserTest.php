@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Services;
+namespace App\Tests\Services\Git;
 
 use App\Exceptions\InvalidPayloadException;
 use App\Services\Git\GitHubWebHookParser;
@@ -14,7 +14,7 @@ class GitHubWebHookParserTest extends TestCase
 
     public function setup()
     {
-        $key                 = '';
+        $key = '';
         $this->webHookParser = new GitHubWebHookParser($key);
     }
 

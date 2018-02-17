@@ -2,26 +2,41 @@
 
 namespace App\Services\LocalBuilding;
 
+use App\Entity\VCSRepositoryInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
 class LocalGit implements LocalGitInterface
 {
+	/** @var string */
 	private $rootDir;
 
-	public function __construct(string $rootDir)
+	/** @var VSCRepositoryInterface */
+	private $repository;
+
+	public function __construct(string $rootDir, VCSRepositoryInterface $repository)
 	{
 		$this->rootDir = $rootDir;
+		$this->repository = $repository;
 	}
 
-	public function has(string $repoName)
+	public function has() : bool
 	{
-		return file_exists($this->getRepositoryPath($repoName));
+		return file_exists($this->getRepositoryDirectory());
 	}
 
-	public function clone(string $repoURL) : bool
+	public function createRepositoryDirectory()
+	{
+		$fileSystem = new Filesystem();
+		$fileSystem->mkdir($this->getRepositoryDirectory());
+	}
+
+	public function clone() : bool
 	{
 		$previousDirectory = getcwd();
-		chdir($this->getRepositoryPath());
+		chdir($this->getRepositoryDirectory());
+		$repositoryURL = $this->repository->getCloneURL();
 
-		list($ouput, $exitCode) = $this->executeCommandWithOutput("git clone $repoURL .");
+		list($ouput, $exitCode) = $this->executeCommandWithOutput("git clone $repositoryURL .");
 
 		chdir($previousDirectory);
 		return $exitCode === 0;
@@ -30,7 +45,7 @@ class LocalGit implements LocalGitInterface
 	public function fetch() : bool
 	{
 		$previousDirectory = getcwd();
-		chdir($this->getRepositoryPath());
+		chdir($this->getRepositoryDirectory());
 
 		list($ouput, $exitCode) = $this->executeCommandWithOutput("git fetch -a");
 
@@ -38,10 +53,11 @@ class LocalGit implements LocalGitInterface
 		return $exitCode === 0;
 	}
 
-	public function checkout(string $revisionNumber) : bool
+	public function checkout() : bool
 	{
 		$previousDirectory = getcwd();
-		chdir($this->getRepositoryPath());
+		chdir($this->getRepositoryDirectory());
+		$revisionNumber = $this->repository->getRevisionNumber();
 
 		list($ouput, $exitCode) = $this->executeCommandWithOutput("git checkout $revisionNumber");
 
@@ -52,12 +68,22 @@ class LocalGit implements LocalGitInterface
 	private function executeCommandWithOutput(string $command) : array
 	{
 		$output = [];
-		$return_var = 1;
-		exec($command, $output, $return_var);
+		$exitCode = 1;
+		exec($command, $output, $exitCode);
+
+		return [$output, $exitCode];
 	}
 
-	private function getRepositoryPath(string $repositoryName) : string
+	private function getRepositoryDirectory() : string
 	{
-		return $this->rootDir . DIRECTORY_SEPARATOR . base64encode($repoName);
+		$repositoryName = $this->repository->getName();
+
+		if (strlen($repositoryName) === 0) {
+			$directory = '_empty';
+		} else {
+			$directory = base64_encode($repositoryName);
+		}
+
+		return $this->rootDir . DIRECTORY_SEPARATOR . $directory;
 	}
 }

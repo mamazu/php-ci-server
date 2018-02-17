@@ -39,12 +39,12 @@ class LocalGitTest extends TestCase
 	{
 		// Prepare
 		$this->repository->method('getName')->willReturn($repositoryName);
-		self::assertFalse($this->localGit->has($repositoryName));
+		self::assertFalse($this->localGit->has($this->repository));
 
-		$this->localGit->createRepositoryDirectory($repositoryName);
+		$this->localGit->createRepositoryDirectory($this->repository);
 		
 		// Execute and assert
-		self::assertTrue($this->localGit->has($repositoryName));
+		self::assertTrue($this->localGit->has($this->repository));
 	}
 
 	public function dataHasRepository() : array
@@ -61,14 +61,14 @@ class LocalGitTest extends TestCase
 		// Prepare
 		$this->repository->method('getCloneURL')->willReturn('https://github.com/mamazu/php-ci-server.git');
 		$this->repository->method('getName')->willReturn('mamazu/php-ci-server');
-		$this->localGit->createRepositoryDirectory();
+		$this->localGit->createRepositoryDirectory($this->repository);
 
 		// Execute
-		$success = $this->localGit->clone();
+		$success = $this->localGit->clone($this->repository);
 
 		// Assert
 		self::assertTrue($success);
-		self::assertTrue($this->localGit->has());
+		self::assertTrue($this->localGit->has($this->repository));
 	}
 
 	public function testFetchRepoUpdate()
@@ -76,14 +76,14 @@ class LocalGitTest extends TestCase
 		// Prepare
 		$this->repository->method('getCloneURL')->willReturn('https://github.com/mamazu/php-ci-server.git');
 		$this->repository->method('getName')->willReturn('mamazu/php-ci-server');
-		$this->localGit->createRepositoryDirectory();
+		$this->localGit->createRepositoryDirectory($this->repository);
 
 		// Execute
-		self::assertTrue($this->localGit->clone());
-		self::assertTrue($this->localGit->fetch());
+		self::assertTrue($this->localGit->clone($this->repository));
+		self::assertTrue($this->localGit->fetch($this->repository));
 
 		// Assert
-		self::assertTrue($this->localGit->has());
+		self::assertTrue($this->localGit->has($this->repository));
 	}
 
 	public function testCheckoutRevision()
@@ -93,14 +93,14 @@ class LocalGitTest extends TestCase
 		$this->repository->method('getName')->willReturn('mamazu/php-ci-server');
 		$this->repository->method('getRevisionNumber')->willReturn('10a907fd80d9f28f8d4840b71e31ff391af4e48e');
 
-		$this->localGit->createRepositoryDirectory();
+		$this->localGit->createRepositoryDirectory($this->repository);
 
 		// Execute
-		self::assertTrue($this->localGit->clone());
-		self::assertTrue($this->localGit->checkout());
+		self::assertTrue($this->localGit->clone($this->repository));
+		self::assertTrue($this->localGit->checkout($this->repository));
 
 		// Assert
-		self::assertTrue($this->localGit->has());
+		self::assertTrue($this->localGit->has($this->repository));
 	}
 
 }

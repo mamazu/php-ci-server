@@ -6,13 +6,13 @@ namespace App\Services\Git;
 
 use App\Exceptions\InvalidRepositoryURLException;
 use App\Exceptions\InvalidRevisionException;
-use App\Services\VCSRepositoryValidator;
+use App\Services\VCSRepositoryValidatorInterface;
 
 
-class GitRepositoryValidator implements VCSRepositoryValidator
+class GitRepositoryValidator implements VCSRepositoryValidatorInterface
 {
 	/** {@inheritdoc} */
-	public function validateRepositoryURL(string $url) 
+	public function validateRepositoryURL(string $url)
 	{
 		if (is_int(strpos($url, '@'))) {
 			// Regex for ssh repos
@@ -29,7 +29,7 @@ class GitRepositoryValidator implements VCSRepositoryValidator
 	}
 
 	/** {@inheritdoc} */
-	public function validateRevisionNumber(string $revisionNumber) 
+	public function validateRevisionNumber(string $revisionNumber)
 	{
 		$lengthMatches = strlen($revisionNumber) === 40;
 		$isAlphaNumerical = preg_match('/^[a-z0-9]+$/', $revisionNumber) === 1;

@@ -5,6 +5,8 @@ namespace App\Entity;
 
 use App\Services\VCSRepositoryValidatorInterface;
 
+use App\Exceptions\{InvalidRepositoryURLException, InvalidRevisionException};
+
 class VCSRepository implements VCSRepositoryInterface
 {
 	/** @var string */
@@ -16,14 +18,25 @@ class VCSRepository implements VCSRepositoryInterface
 	/** @var string */
 	private $revision;
 
+    /**
+     * VCSRepository constructor.
+     *
+     * @param VCSRepositoryValidatorInterface $validator
+     * @param string                          $cloneURL
+     * @param string                          $repositoryName
+     * @param string                          $revision
+     *
+     * @throws InvalidRepositoryURLException
+     * @throws InvalidRevisionException
+     */
 	public function __construct(
 		VCSRepositoryValidatorInterface $validator,
 		string $cloneURL,
 		string $repositoryName,
 		string $revision
 	) {
-		$this->validator->validateRepositoryURL($cloneURL);
-		$this->validator->validateRevisionNumber($revision);
+		$validator->validateRepositoryURL($cloneURL);
+		$validator->validateRevisionNumber($revision);
 
 		$this->cloneURL = $cloneURL;
 		$this->name = $repositoryName;

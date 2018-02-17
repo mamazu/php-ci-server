@@ -29,7 +29,7 @@ class CommandExecutor implements CommandExecutorInterface
 		$escapedArguments = array_map('escapeshellarg', $arguments);
 		$commandToExecute = $command . ' ' . join(' ', $escapedArguments);
 
-		return $this->executeCommand($commandToExecute);
+		return $this->execute($commandToExecute);
 	}
 
 	/** {@inheritdoc} */

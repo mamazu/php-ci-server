@@ -3,6 +3,9 @@ declare (strict_types = 1);
 
 namespace App\Services;
 
+use App\Exceptions\InvalidRevisionException;
+use App\Exceptions\InvalidRepositoryURLException;
+
 interface VCSRepositoryValidatorInterface
 {
 	/**
@@ -10,7 +13,7 @@ interface VCSRepositoryValidatorInterface
 	 * 
 	 * @param string $url URL to validate
 	 * 
-	 * @throws GitValidationException
+	 * @throws InvalidRepositoryURLException
 	 */
 	public function validateRepositoryURL(string $url);
 

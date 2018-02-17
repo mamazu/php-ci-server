@@ -29,5 +29,11 @@ interface GitHubWebHookParserInterface
 
     public function getCloneUrl();
 
+    /**
+     * Validates the signiture Github sends with the request.
+     *
+     * @param string $signature
+     * @return boolean
+     */
     public function validateSignature(string $signature) : bool;
 }

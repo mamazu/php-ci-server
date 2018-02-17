@@ -16,11 +16,19 @@ class JobBuilder implements JobBuilderInterface
 		$this->gitInterface = $gitInterface;
 	}
 
+	/** {@inheritdoc} */
 	public function build(BuildJobInterface $buildJob) : bool
 	{
 		$this->prepareSourceCode($buildJob->getRepository());
+		return true;
 	}
 
+	/**
+	 * Prepares the sourcecode (aka. checkout and update)
+	 * 
+	 * @param VCSRepositoryInterface $repository
+	 * @return void
+	 */
 	private function prepareSourceCode(VCSRepositoryInterface $repository)
 	{
 		if ($this->gitInterface->has($repository)) {

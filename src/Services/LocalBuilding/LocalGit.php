@@ -22,16 +22,19 @@ class LocalGit implements LocalGitInterface
 		$this->fileSystem = new FileSystem();
 	}
 
+	/** {@inheritdoc} */
 	public function has(VCSRepositoryInterface $repository) : bool
 	{
 		return file_exists($this->getRepositoryDirectory($repository));
 	}
 
+	/** {@inheritdoc} */
 	public function createRepositoryDirectory(VCSRepositoryInterface $repository)
 	{
 		$this->fileSystem->mkdir($this->getRepositoryDirectory($repository));
 	}
 
+	/** {@inheritdoc} */
 	public function clone(VCSRepositoryInterface $repository) : bool
 	{
 		$previousDirectory = getcwd();
@@ -44,6 +47,7 @@ class LocalGit implements LocalGitInterface
 		return $success;
 	}
 
+	/** {@inheritdoc} */
 	public function fetch(VCSRepositoryInterface $repository) : bool
 	{
 		$previousDirectory = getcwd();

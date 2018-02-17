@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace App\Services\Git;
+namespace App\Service\Git;
 
 use App\Exception\InvalidPayloadException;
 use stdClass;

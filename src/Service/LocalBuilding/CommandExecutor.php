@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace App\Services\LocalBuilding;
+namespace App\Service\LocalBuilding;
 
 class CommandExecutor implements CommandExecutorInterface
 {

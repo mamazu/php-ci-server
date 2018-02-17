@@ -3,9 +3,9 @@
 namespace App\Tests\Services\LocalBuilding;
 
 use App\Entity\VCSRepositoryInterface;
-use App\Services\LocalBuilding\LocalGit;
-use App\Services\LocalBuilding\LocalGitInterface;
-use App\Services\LocalBuilding\CommandExecutorInterface;
+use App\Service\LocalBuilding\LocalGit;
+use App\Service\LocalBuilding\LocalGitInterface;
+use App\Service\LocalBuilding\CommandExecutorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 

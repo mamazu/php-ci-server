@@ -7,7 +7,7 @@
  * Time: 18:44
  */
 
-namespace App\Services\Git;
+namespace App\Service\Git;
 
 use App\Exception\InvalidPayloadException;
 

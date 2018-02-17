@@ -2,8 +2,8 @@
 namespace App\Tests\Services\LocalBuilding;
 
 use PHPUnit\Framework\TestCase;
-use App\Services\LocalBuilding\CommandExecutor;
-use App\Services\LocalBuilding\CommandExecutorInterface;
+use App\Service\LocalBuilding\CommandExecutor;
+use App\Service\LocalBuilding\CommandExecutorInterface;
 use Exception;
 
 class CommandExecutorTest extends TestCase

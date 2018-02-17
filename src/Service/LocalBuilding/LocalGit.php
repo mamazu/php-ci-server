@@ -1,11 +1,11 @@
 <?php
 declare (strict_types = 1);
 
-namespace App\Services\LocalBuilding;
+namespace App\Service\LocalBuilding;
 
 use App\Entity\VCSRepositoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use App\Services\LocalBuilding\CommandExecutorInterface;
+use App\Service\LocalBuilding\CommandExecutorInterface;
 
 class LocalGit implements LocalGitInterface
 {

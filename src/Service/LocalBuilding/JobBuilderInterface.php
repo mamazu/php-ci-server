@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Services\LocalBuilding;
+namespace App\Service\LocalBuilding;
 
 use App\Entity\BuildJobInterface;
 

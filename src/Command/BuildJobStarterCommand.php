@@ -11,7 +11,7 @@ use Exception;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Entity\BuildJob;
 use App\Entity\BuildJobInterface;
-use App\Services\LocalBuilding\JobBuilderInterface;
+use App\Service\LocalBuilding\JobBuilderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class BuildJobStarterCommand extends Command

@@ -2,12 +2,12 @@
 
 declare (strict_types = 1);
 
-namespace App\Services\Git;
+namespace App\Service\Git;
 
 use App\Exception \{
 	InvalidRepositoryURLException, InvalidRevisionException
 };
-use App\Services\VCSRepositoryValidatorInterface;
+use App\Service\VCSRepositoryValidatorInterface;
 
 
 class GitRepositoryValidator implements VCSRepositoryValidatorInterface

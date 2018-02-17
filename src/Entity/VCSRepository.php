@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace App\Entity;
 
-use App\Services\VCSRepositoryValidatorInterface;
+use App\Service\VCSRepositoryValidatorInterface;
 
 use App\Exception\{InvalidRepositoryURLException, InvalidRevisionException};
 

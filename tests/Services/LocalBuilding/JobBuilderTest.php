@@ -3,8 +3,8 @@
 declare (strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
-use App\Services\LocalBuilding\JobBuilder;
-use App\Services\LocalBuilding\LocalGitInterface;
+use App\Service\LocalBuilding\JobBuilder;
+use App\Service\LocalBuilding\LocalGitInterface;
 
 class JobBuilderTest extends TestCase
 {

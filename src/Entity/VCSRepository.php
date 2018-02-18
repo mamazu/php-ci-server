@@ -9,6 +9,9 @@ use App\Exception\{InvalidRepositoryURLException, InvalidRevisionException};
 
 class VCSRepository implements VCSRepositoryInterface
 {
+	/** @var int */
+	private $id;
+
 	/** @var string */
 	private $cloneURL;
 
@@ -41,6 +44,14 @@ class VCSRepository implements VCSRepositoryInterface
 		$this->cloneURL = $cloneURL;
 		$this->name = $repositoryName;
 		$this->revision = $revision;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getId(): int
+	{
+		return $this->id;
 	}
 
 	public function getName() : string

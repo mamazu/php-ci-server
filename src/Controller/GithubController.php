@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BuildJob;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class GithubController extends Controller
 {
@@ -30,7 +29,11 @@ class GithubController extends Controller
 	}
 
 	/**
-	 * @Route("/github_hook", name="githubHook")
+	 * This is the route the github web hook will trigger
+	 *
+	 * @param Request $request
+	 *
+	 * @return Response
 	 */
 	public function githubHook(Request $request) : Response
 	{
@@ -41,7 +44,7 @@ class GithubController extends Controller
 		}
 
 		$signature = $request->server->get('HTTP_X_HUB_SIGNATURE');
-		if (!$this->gitHubWebHookService->validateSignature($signature)) {
+		if ($signature === null || !$this->gitHubWebHookService->validateSignature($signature)) {
 			return new Response('Wrong signature', 401);
 		}
 

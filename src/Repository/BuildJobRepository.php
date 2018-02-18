@@ -17,7 +17,7 @@ class BuildJobRepository extends ServiceEntityRepository implements BuildJobRepo
     /** {@inheritdoc} */
     public function getNextBuildJob()
     {
-        $statement = $this->_em->getConnection()->prepare('
+        $statement = $this->_em->getConnection()->prepare(<<<SQL
         SELECT * 
         FROM (
             SELECT
@@ -31,7 +31,8 @@ class BuildJobRepository extends ServiceEntityRepository implements BuildJobRepo
         ) state
         WHERE stateName = :stateName
         LIMIT 1;
-        ');
+SQL
+);
         $statement->execute([':stateName' => 'pending']);
         $result = $statement->fetchAll();
         return count($result) > 0 ? $this->find($result[0]['build_job_id']) : null;

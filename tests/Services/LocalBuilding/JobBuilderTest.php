@@ -2,6 +2,7 @@
 
 declare (strict_types = 1);
 
+use App\Service\LocalBuilding\JobBuilderInterface;
 use PHPUnit\Framework\TestCase;
 use App\Service\LocalBuilding\JobBuilder;
 use App\Service\LocalBuilding\LocalGitInterface;
@@ -37,9 +38,10 @@ class JobBuilderTest extends TestCase
 	public function testBuildWithExistingRepo()
 	{
 		$this->localGit->method('has')->willReturn(true);
-		$repo = $this->createRepository();
-		$buildJob = new BuildJob(1);
 
-		self::assertTrue($this->jobBuilder->build($repo));
+		$repo = $this->createRepository();
+		$buildJob = new BuildJob($repo);
+
+		self::assertTrue($this->jobBuilder->build($buildJob));
 	}
 }

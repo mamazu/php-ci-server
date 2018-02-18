@@ -32,11 +32,11 @@ class JobBuilder implements JobBuilderInterface
 	private function prepareSourceCode(VCSRepositoryInterface $repository)
 	{
 		if ($this->gitInterface->has($repository)) {
-			$this->gitInterface->fetch();
+			$this->gitInterface->fetch($repository);
 		} else {
-			$this->gitInterface->clone();
+			$this->gitInterface->clone($repository);
 		}
 
-		$this->gitInterface->checkout();
+		$this->gitInterface->checkout($repository);
 	}
 }

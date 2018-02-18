@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\BuildJobRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +27,7 @@ class BuildJobStarterCommand extends Command
 	private $entityManager;
 
 	public function __construct(
-		BuildJobRepository $buildJobRepository,
+		BuildJobRepositoryInterface $buildJobRepository,
 		JobBuilderInterface $jobBuilder,
 		EntityManagerInterface $entityManager
 	) {

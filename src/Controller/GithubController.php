@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\Service\Git\GitHubWebHookParserInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\Git\GitHubWebHookParser;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BuildJob;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class GithubController extends Controller
 {
@@ -28,7 +27,7 @@ class GithubController extends Controller
 	}
 
 	/**
-	 * @Route("/github_hook", name="github_hook")
+	 * @Route("/github_hook", name="githubHook")
 	 */
 	public function githubHook(Request $request) : Response
 	{

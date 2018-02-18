@@ -9,28 +9,23 @@
 
 namespace App\Service\Git;
 
-use App\Exception\InvalidPayloadException;
+use App\Entity\VCSRepositoryInterface;
 
 interface GitHubWebHookParserInterface
 {
-    /**
-     * Sets the payload for the parser.
-     * If the payload is invalid it throws an InvalidPayloadException
-     *
-     * @param string $payload
-     *
-     * @return void
-     *
-     * @throws InvalidPayloadException
-     */
-    public function setPayload(string $payload);
-
-    public function getCommitId();
-
-    public function getCloneUrl();
+	/**
+	 * Sets the payload for the parser.
+	 * If the payload is invalid it throws an InvalidPayloadException
+	 *
+	 * @param string $payload
+	 *
+	 * @return VCSRepositoryInterface
+	 *
+	 */
+    public function getRepository(string $payload): VCSRepositoryInterface;
 
     /**
-     * Validates the signiture Github sends with the request.
+     * Validates the signature Github sends with the request.
      *
      * @param string $signature
      * @return boolean

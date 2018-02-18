@@ -9,55 +9,53 @@ use PHPUnit\Framework\TestCase;
 
 class GitHubWebHookParserTest extends TestCase
 {
-    /** @var GitHubWebHookParserInterface */
-    private $webHookParser;
+	/** @var GitHubWebHookParserInterface */
+	private $webHookParser;
 
-    public function setup()
-    {
-        $key = '';
-        $this->webHookParser = new GitHubWebHookParser($key);
-    }
+	public function setup()
+	{
+		$key                 = '';
+		$this->webHookParser = new GitHubWebHookParser($key);
+	}
 
-    public function testImplements()
-    {
-        TestCase::assertTrue($this->webHookParser instanceof GitHubWebHookParserInterface);
-    }
+	public function testImplements()
+	{
+		TestCase::assertTrue($this->webHookParser instanceof GitHubWebHookParserInterface);
+	}
 
-    public function testNotValid()
-    {
-        try {
-            $this->webHookParser->setPayload('payload');
-        } catch (InvalidPayloadException $exception) {
-            TestCase::assertTrue(true);
-            return;
-        }
-        TestCase::assertFalse(true);
-    }
+	public function testNotInvalidJSON()
+	{
+		self::expectException(\Exception::class);
+		self::expectExceptionMessage('The payload is not valid json');
 
+		$this->webHookParser->getRepository('{"head_commit"sas: {}}');
+	}
 
-    public function testNotValidCommitId()
-    {
-        $this->webHookParser->setPayload('{"head_commit": {}}');
+	public function testNotValidCommitId()
+	{
+		self::expectException(\Exception::class);
+		self::expectExceptionMessage('Invalid json. Missing information');
 
-        $commitId = $this->webHookParser->getCommitId();
-        TestCase::assertNull($commitId);
-    }
+		$this->webHookParser->getRepository('{"head_commit": {}}');
+	}
 
-    public function testGetCommitId()
-    {
-        $this->webHookParser->setPayload('{"head_commit": {"id": "abc"}}');
+	public function testGetCloneUrl()
+	{
+		$repository = $this->webHookParser->getRepository(<<<JSON
+{
+	"repository": {
+		"name": "something/else",
+		"clone_url": "https://github.com/something/else.git"
+	},
+	"head_commit": {
+		"id": "d26b4e91cfb1475c16e65a3f770d672d926a7ac4"
+	}
+}
+JSON
+		);
+		self::assertEquals('https://github.com/something/else.git', $repository->getCloneURL());
+		self::assertEquals('something/else', $repository->getName());
+		self::assertEquals('d26b4e91cfb1475c16e65a3f770d672d926a7ac4', $repository->getRevisionNumber());
 
-        $commitId = $this->webHookParser->getCommitId();
-        TestCase::assertNotNull($commitId);
-        TestCase::assertEquals('abc', $commitId);
-    }
-
-    public function testGetCloneUrl()
-    {
-        $this->webHookParser->setPayload('{"repository": {"clone_url": "https://github.com/something/else"}}');
-
-        $cloneURL = $this->webHookParser->getCloneUrl();
-        TestCase::assertNotNull($cloneURL);
-        TestCase::assertEquals('https://github.com/something/else', $cloneURL);
-    }
+	}
 }

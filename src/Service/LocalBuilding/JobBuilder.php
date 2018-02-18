@@ -8,7 +8,7 @@ use App\Entity\VCSRepositoryInterface;
 
 class JobBuilder implements JobBuilderInterface
 {
-	/** @var GitInterface */
+	/** @var LocalGitInterface */
 	private $gitInterface;
 
 	public function __construct(LocalGitInterface $gitInterface)

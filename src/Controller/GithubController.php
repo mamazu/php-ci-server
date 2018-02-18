@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\VCSRepository;
 use App\Service\Git\GitHubWebHookParserInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,15 +40,13 @@ class GithubController extends Controller
 			return new Response('This is not a GitHub request');
 		}
 
-		$this->gitHubWebHookService->setPayload($payload);
-
-		$signiture = $request->server->get('HTTP_X_HUB_SIGNATURE');
-		if (!$this->gitHubWebHookService->validateSigniture($signiture)) {
-			return new Response('Wrong signiture', 401);
+		$signature = $request->server->get('HTTP_X_HUB_SIGNATURE');
+		if (!$this->gitHubWebHookService->validateSignature($signature)) {
+			return new Response('Wrong signature', 401);
 		}
 
 		if ($this->processRequest($payload)) {
-			return new Response('Sucessfully added it to the list of todos');
+			return new Response('Successfully added it to the list of todo\'s');
 		}
 
 		return new Response('Could not process the request');
@@ -53,17 +54,16 @@ class GithubController extends Controller
 
 	private function processRequest(string $payload) : bool
 	{
-		$commitId = $this->gitHubWebHookService->getCommitId();
-		$cloneUrl = $this->gitHubWebHookService->getCloneUrl();
+		try{
+			$repository = $this->gitHubWebHookService->getRepository($payload);
 
-		if (is_null($commitId) || is_null($cloneUrl)) {
+			$newJob = new BuildJob($repository);
+			$this->entityManager->persist($newJob);
+			$this->entityManager->flush();
+			return true;
+		} catch (Exception $exception){
 			return false;
 		}
 
-		$newJob = new BuildJob($commitId, $cloneUrl);
-		$this->entityManager->persist($newJob);
-		$this->entityManager->flush();
-
-		return true;
 	}
 }

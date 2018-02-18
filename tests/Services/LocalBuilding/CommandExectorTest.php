@@ -64,7 +64,7 @@ class CommandExecutorTest extends TestCase
 	public function testEscapedCommand()
 	{
 		// Execute
-		$success = $this->commandExecutor->execute('echo', ['Hallo|echo']);
+		$success = $this->commandExecutor->savelyExecute('echo', ['Hallo|echo']);
 
 		// Assert
 		self::assertTrue($success);

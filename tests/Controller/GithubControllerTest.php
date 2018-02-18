@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mamazu
- * Date: 18/02/18
- * Time: 00:04
- */
+declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
@@ -14,16 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class GithubControllerTest extends WebTestCase
 {
 	public function testGitHubController(){
-//		$client = self::createClient();
-//
-//		$crawler = $client->request('GET', '/github_hook');
-//		var_dump($client->getRequest()->getBaseUrl());
-//
-//		self::assertEquals(200, $client->getResponse()->getStatusCode());
-//		echo $client->getResponse()->getContent();
-//
-//		self::assertEquals(2, $crawler->filter('html:contains(Github)')->count());
-//		self::assertEquals(2, $crawler->filter('html:contains(banana)')->count());
-		self::assertTrue(true);
+		$client = self::createClient();
+
+		$client->request('GET', '/github_webhook');
+
+		self::assertEquals(200, $client->getResponse()->getStatusCode());
+		$content= $client->getResponse()->getContent();
+
+		self::assertEquals('This is not a GitHub request', $content);
 	}
 }

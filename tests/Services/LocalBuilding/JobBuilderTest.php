@@ -44,4 +44,14 @@ class JobBuilderTest extends TestCase
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
 	}
+
+	public function testBuildWithNewRepo()
+	{
+		$this->localGit->method('has')->willReturn(false);
+
+		$repo = $this->createRepository();
+		$buildJob = new BuildJob($repo);
+
+		self::assertTrue($this->jobBuilder->build($buildJob));
+	}
 }

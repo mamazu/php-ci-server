@@ -23,6 +23,22 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
 		$this->key = $key;
 	}
 
+	public function getRepository(string $payload): VCSRepositoryInterface
+	{
+		$this->setPayload($payload);
+
+		try {
+			$validator = new GitRepositoryValidator();
+			$cloneURL  = $this->getValueFromPath('repository.clone_url');
+			$name      = $this->getValueFromPath('repository.name');
+			$commitId  = $this->getValueFromPath('head_commit.id');
+
+			return new VCSRepository($validator, $cloneURL, $name, $commitId);
+		} catch (\TypeError $exception) {
+			throw new \Exception('Invalid json. Missing information', 0, $exception);
+		}
+	}
+
 	/** {@inheritdoc} */
 	private function setPayload(string $payload)
 	{
@@ -52,23 +68,7 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
 			}
 		}
 
-		return !is_string($currentNode) ? (string) $currentNode : $currentNode;
-	}
-
-	public function getRepository(string $payload): VCSRepositoryInterface
-	{
-		$this->setPayload($payload);
-
-		try{
-			$validator = new GitRepositoryValidator();
-			$cloneURL = $this->getValueFromPath('repository.clone_url');
-			$name     = $this->getValueFromPath('repository.name');
-			$commitId = $this->getValueFromPath('head_commit.id');
-
-			return new VCSRepository($validator, $cloneURL, $name, $commitId);
-		}catch(\TypeError $exception){
-			throw new \Exception('Invalid json. Missing information', 0, $exception);
-		}
+		return !is_string($currentNode) ? (string)$currentNode : $currentNode;
 	}
 
 	/** {@inheritdoc} */
@@ -76,6 +76,7 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
 	{
 		$rawData           = file_get_contents('php://input');
 		$expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $this->key);
+
 		return $signature === $expectedSignature;
 	}
 }

@@ -17,15 +17,15 @@ class GithubController extends Controller
 	/** @var EntityManagerInterface $entityManager */
 	private $entityManager;
 
-    /** @var GitHubWebHookParserInterface $gitHubWebHookService */
-	private $gitHubWebHookService;
+	/** @var GitHubWebHookParserInterface $githubWebHookParser */
+	private $githubWebHookParser;
 
 	public function __construct(
-        EntityManagerInterface $entityManager,
-        GitHubWebHookParserInterface $gitHubWebHookService
+		EntityManagerInterface $entityManager,
+		GitHubWebHookParserInterface $gitHubWebHookParser
 	) {
-		$this->entityManager = $entityManager;
-		$this->gitHubWebHookService = $gitHubWebHookService;
+		$this->entityManager       = $entityManager;
+		$this->githubWebHookParser = $gitHubWebHookParser;
 	}
 
 	/**
@@ -35,7 +35,7 @@ class GithubController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function githubHook(Request $request) : Response
+	public function githubHook(Request $request): Response
 	{
 		$payload = $request->request->get('payload');
 
@@ -44,7 +44,8 @@ class GithubController extends Controller
 		}
 
 		$signature = $request->server->get('HTTP_X_HUB_SIGNATURE');
-		if ($signature === null || !$this->gitHubWebHookService->validateSignature($signature)) {
+
+		if ($signature === null || !$this->githubWebHookParser->validateSignature($signature)) {
 			return new Response('Wrong signature', 401);
 		}
 
@@ -55,16 +56,16 @@ class GithubController extends Controller
 		return new Response('Could not process the request');
 	}
 
-	private function processRequest(string $payload) : bool
+	private function processRequest(string $payload): bool
 	{
-		try{
-			$repository = $this->gitHubWebHookService->getRepository($payload);
+		try {
+			$repository = $this->githubWebHookParser->getRepository($payload);
 
 			$newJob = new BuildJob($repository);
 			$this->entityManager->persist($newJob);
 			$this->entityManager->flush();
 			return true;
-		} catch (Exception $exception){
+		} catch (Exception $exception) {
 			return false;
 		}
 

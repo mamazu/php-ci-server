@@ -39,7 +39,7 @@ class IndexControllerTest extends WebTestCase
 			return $this->buildJobObjects;
 		});
 
-		$container->set('App\Repository\BuildJobRepository', $buildJobRepo);
+		$container->set('App\\Repository\\BuildJobRepository', $buildJobRepo);
 
 		return $client;
 	}

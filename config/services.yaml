@@ -28,6 +28,7 @@ services:
     # please note that last definitions always *replace* previous ones
 
     App\Service\Git\GitHubWebHookParser:
+        public: true
         arguments: ['abc']
 
     App\Service\LocalBuilding\LocalGit:

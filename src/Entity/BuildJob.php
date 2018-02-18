@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class BuildJob implements BuildJobInterface
@@ -43,7 +42,7 @@ class BuildJob implements BuildJobInterface
 	}
 
 	//region State Logic
-	public function getState(): BuildState
+	public function getState(): BuildStateInterface
 	{
 		return $this->states->last();
 	}

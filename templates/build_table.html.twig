@@ -7,12 +7,13 @@
     </ul>
 {% endmacro %}
 
-{% macro build_repo_link(repoName) %}
-    <a href="https://github.com/{{repoName}}" target="_blank">{{repoName}}</a>
+{% macro build_repo_link(repository) %}
+    <a href="https://github.com/{{ repository.name }}" target="_blank">{{ repository.name }}</a>
 {% endmacro %}
 
-{% macro build_commit_link(repoName, commitId) %}
-    <a href="https://github.com/{{repoName}}/commit/{{commitId}}" target="_blank">{{commitId}}</a>
+{% macro build_commit_link(repository) %}
+    <a href="https://github.com/{{ repository.name }}/commit/{{ repository.revisionNumber }}"
+       target="_blank">{{ repository.revisionNumber }}</a>
 {% endmacro %}
 
 {% macro build_cancel_link(build_job) %}
@@ -23,25 +24,25 @@
 
 <table summary="Table of builds and their status" id="buildtable">
     <thead>
-        <tr>
-            <th>Id</th>
-            <th>Repository</th>
-            <th>Commit-ID</th>
-            <th>Status</th>
-            <th>Cancel</th>
-        </tr>
+    <tr>
+        <th>Id</th>
+        <th>Repository</th>
+        <th>Commit-ID</th>
+        <th>Status</th>
+        <th>Cancel</th>
+    </tr>
     </thead>
     <tbody>
-        {% for build_job in build_jobs %}
-            <tr class="state-{{ build_job.state.name }}">
-                <td>{{ build_job.id }}</td>
-                <td>{{ table.build_repo_link(build_job.repositoryName) }}</td>
-                <td>{{ table.build_commit_link(build_job.repositoryName, build_job.commitId) }}</td>
-                <td>{{ table.print_build_state(build_job.states) }}</td>
-                <td class="job_cancel">
-                    {{ table.build_cancel_link(build_job.id) }}
-                </td>
-            </tr>
-        {% endfor %}
+    {% for build_job in build_jobs %}
+        <tr class="state-{{ build_job.state.name }}">
+            <td>{{ build_job.id }}</td>
+            <td>{{ table.build_repo_link(build_job.repository) }}</td>
+            <td>{{ table.build_commit_link(build_job.repository) }}</td>
+            <td>{{ table.print_build_state(build_job.states) }}</td>
+            <td class="job_cancel">
+                {{ table.build_cancel_link(build_job.id) }}
+            </td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>

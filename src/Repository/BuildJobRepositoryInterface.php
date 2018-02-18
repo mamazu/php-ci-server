@@ -10,8 +10,9 @@ namespace App\Repository;
 
 
 use App\Entity\BuildJobInterface;
+use Doctrine\Common\Persistence\ObjectRepository;
 
-interface BuildJobRepositoryInterface
+interface BuildJobRepositoryInterface extends ObjectRepository
 {
 	/**
 	 * @return BuildJobInterface|null

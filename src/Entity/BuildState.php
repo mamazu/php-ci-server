@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
-class BuildState
+class BuildState implements BuildStateInterface
 {
 	/** @var int */
 	private $id;

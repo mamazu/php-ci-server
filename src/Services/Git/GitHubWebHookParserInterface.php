@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: mamazu
@@ -46,5 +47,5 @@ interface GitHubWebHookParserInterface
      *
      * @return bool
      */
-    public function validateSignature(string $key, string $signature): bool;
+    public function validateSignature(string $key, string $signature) : bool;
 }

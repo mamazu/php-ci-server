@@ -26,5 +26,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Services\LocalBuilding\LocalGit:
-        arguments: ['/home/www-data/Documents']
+
+    App\Service\Git\GitHubWebHookParser:
+        public: true
+        arguments: ['abc']
+
+    App\Service\LocalBuilding\LocalGit:
+        arguments: ['/home']

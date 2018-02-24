@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Services\Git;
 
@@ -16,7 +16,8 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
     /** @var PHPStreamsInterface */
     private $streams;
 
-    public function __construct(PHPStreamsInterface $streams) {
+    public function __construct(PHPStreamsInterface $streams)
+    {
         $this->streams = $streams;
     }
 
@@ -58,9 +59,9 @@ class GitHubWebHookParser implements GitHubWebHookParserInterface
     }
 
     /** {@inheritdoc} */
-    public function validateSignature(string $key, string $signature): bool
+    public function validateSignature(string $key, string $signature) : bool
     {
-        $rawData           = $this->streams->getInput();
+        $rawData = $this->streams->getInput();
         $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawData, $key);
 
         return $signature === $expectedSignature;

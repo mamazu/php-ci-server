@@ -1,12 +1,12 @@
 <?php
-declare(strict_types=1);
+
+declare (strict_types = 1);
 
 namespace App\Tests\Services\Git;
 
-use App\Exceptions\InvalidPayloadException;
-use App\Services\Git\GitHubWebHookParser;
-use App\Services\Git\GitHubWebHookParserInterface;
-use App\Services\PHPStreamsInterface;
+use App\Exception\InvalidPayloadException;
+use App\Service\Git\GitHubWebHookParser;
+use App\Service\Git\GitHubWebHookParserInterface;
 use PHPUnit\Framework\TestCase;
 
 class GitHubWebHookParserTest extends TestCase
@@ -14,13 +14,10 @@ class GitHubWebHookParserTest extends TestCase
     /** @var GitHubWebHookParserInterface */
     private $webHookParser;
 
-    /** @var PHPStreamsInterface */
-    private $phpStreams;
-
     public function setup()
     {
-        $this->phpStreams    = $this->getMockBuilder(PHPStreamsInterface::class)->getMock();
-        $this->webHookParser = new GitHubWebHookParser($this->phpStreams);
+        $key = '';
+        $this->webHookParser = new GitHubWebHookParser($key);
     }
 
     public function testImplements()
@@ -28,79 +25,38 @@ class GitHubWebHookParserTest extends TestCase
         TestCase::assertTrue($this->webHookParser instanceof GitHubWebHookParserInterface);
     }
 
-    public function testNotValid()
+    public function testNotInvalidJSON()
     {
-        try {
-            $this->webHookParser->setPayload('payload');
-        } catch (InvalidPayloadException $exception) {
-            TestCase::assertTrue(true);
-            return;
-        }
-        TestCase::assertFalse(true);
-    }
+        self::expectException(\Exception::class);
+        self::expectExceptionMessage('The payload is not valid json');
 
+        $this->webHookParser->getRepository('{"head_commit"sas: {}}');
+    }
 
     public function testNotValidCommitId()
     {
-        $this->webHookParser->setPayload('{"head_commit": {}}');
+        self::expectException(\Exception::class);
+        self::expectExceptionMessage('Invalid json. Missing information');
 
-        $commitId = $this->webHookParser->getCommitId();
-        TestCase::assertNull($commitId);
-    }
-
-    public function testGetCommitId()
-    {
-        $this->webHookParser->setPayload('{"head_commit": {"id": "abc"}}');
-
-        $commitId = $this->webHookParser->getCommitId();
-        TestCase::assertNotNull($commitId);
-        TestCase::assertEquals('abc', $commitId);
+        $this->webHookParser->getRepository('{"head_commit": {}}');
     }
 
     public function testGetCloneUrl()
     {
-        $this->webHookParser->setPayload('{"repository": {"clone_url": "https://github.com/something/else"}}');
+        $repository = $this->webHookParser->getRepository(<<<JSON
+{
+	"repository": {
+		"name": "something/else",
+		"clone_url": "https://github.com/something/else.git"
+	},
+	"head_commit": {
+		"id": "d26b4e91cfb1475c16e65a3f770d672d926a7ac4"
+	}
+}
+JSON);
+        self::assertEquals('https://github.com/something/else.git', $repository->getCloneURL());
+        self::assertEquals('something/else', $repository->getName());
+        self::assertEquals('d26b4e91cfb1475c16e65a3f770d672d926a7ac4', $repository->getRevisionNumber());
 
-        $cloneURL = $this->webHookParser->getCloneUrl();
-        TestCase::assertNotNull($cloneURL);
-        TestCase::assertEquals('https://github.com/something/else', $cloneURL);
-    }
-
-    /** @dataProvider dataValidateSignature */
-    public function testValidateSignature(string $data, string $signature, bool $valid)
-    {
-        $this->phpStreams->method('getInput')->willReturn($data);
-
-        TestCase::assertEquals($this->webHookParser->validateSignature('', $signature), $valid, 'was not valid');
-    }
-
-    public function dataValidateSignature(): array
-    {
-        return [
-            'no data, empty signature' => ['', '', false],
-            'no data, some signature'  => ['', 'sha1=fbdb1d1b18aa6c08324b7d64b71fb76370690e1d', true],
-            'data, empty signature'    => ['Hello this is test data', '', false],
-            'data, signature'          => ['Testing the signature validator', 'sha1=50db89ddeb7537bd056da574514656f57a186efe', true],
-        ];
-    }
-
-    /** @dataProvider dataValidateSignatureWithKey */
-    public function testValidateSignatureWithKey(string $data, string $signature, bool $valid)
-    {
-        $this->phpStreams->method('getInput')->willReturn($data);
-
-
-
-        TestCase::assertEquals($this->webHookParser->validateSignature('abcs', $signature), $valid, 'was not valid');
-    }
-
-    public function dataValidateSignatureWithKey(): array
-    {
-        return [
-            'no data, empty signature' => ['', '', false],
-            'no data, some signature'  => ['', 'sha1=d7d9c8c80eb8f190512a544479a62b76b2b2121b', true],
-            'data, empty signature'    => ['Hello this is test data', '', false],
-            'data, signature'          => ['Testing the signature validator', 'sha1=6ef3dad1984b25f0d20ae6d8ea69cc201136f343', true],
-        ];
     }
 }

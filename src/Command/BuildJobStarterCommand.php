@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\BuildJobRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -11,7 +12,7 @@ use Exception;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Entity\BuildJob;
 use App\Entity\BuildJobInterface;
-use App\Services\LocalBuilding\JobBuilderInterface;
+use App\Service\LocalBuilding\JobBuilderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class BuildJobStarterCommand extends Command
@@ -26,7 +27,7 @@ class BuildJobStarterCommand extends Command
 	private $entityManager;
 
 	public function __construct(
-		BuildJobRepository $buildJobRepository,
+		BuildJobRepositoryInterface $buildJobRepository,
 		JobBuilderInterface $jobBuilder,
 		EntityManagerInterface $entityManager
 	) {

@@ -5,8 +5,7 @@
             <id name="id" type="integer" column="id">
                   <generator strategy="AUTO"/>
             </id>
-            <field name="commitId" length="40" />
-            <field name="repositoryName" />
+            <one-to-one field="repository" target-entity="App\Entity\VCSRepository" />
             <one-to-many field="states" target-entity="App\Entity\BuildState" mapped-by="buildJob">
                   <cascade>
                         <cascade-persist />

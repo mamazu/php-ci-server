@@ -23,4 +23,5 @@
 .idea
 ###> phpunit/phpunit ###
 /phpunit.xml
+/tests/test_data
 ###< phpunit/phpunit ###

@@ -7,16 +7,17 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\EntityNotFoundException;
 
-class BuildJobRepository extends ServiceEntityRepository
+class BuildJobRepository extends ServiceEntityRepository implements BuildJobRepositoryInterface
 {
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, BuildJob::class);
     }
 
+    /** {@inheritdoc} */
     public function getNextBuildJob()
     {
-        $statement = $this->_em->getConnection()->prepare('
+        $statement = $this->_em->getConnection()->prepare(<<<SQL
         SELECT * 
         FROM (
             SELECT
@@ -30,7 +31,8 @@ class BuildJobRepository extends ServiceEntityRepository
         ) state
         WHERE stateName = :stateName
         LIMIT 1;
-        ');
+SQL
+);
         $statement->execute([':stateName' => 'pending']);
         $result = $statement->fetchAll();
         return count($result) > 0 ? $this->find($result[0]['build_job_id']) : null;

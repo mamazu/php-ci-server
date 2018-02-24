@@ -1,7 +1,7 @@
 <?php
-declare (strict_types=1);
+declare (strict_types = 1);
 
-namespace App\Services;
+namespace App\Service;
 
 use App\Exceptions\InvalidRepositoryURLException;
 use App\Exceptions\InvalidRevisionException;

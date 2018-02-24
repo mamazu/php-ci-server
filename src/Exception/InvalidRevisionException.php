@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: mamazu
@@ -6,13 +7,13 @@
  * Time: 18:26
  */
 
-namespace App\Exceptions;
+namespace App\Exception;
 
 
 use Exception;
 use Throwable;
 
-class InvalidRepositoryURLException extends Exception
+class InvalidRevisionException extends Exception
 {
     public function __construct(
         string $message = "",
@@ -21,4 +22,5 @@ class InvalidRepositoryURLException extends Exception
     ) {
         parent::__construct($message, $code, $previous);
     }
+
 }

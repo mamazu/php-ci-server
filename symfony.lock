@@ -344,9 +344,6 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.6.0"
     },
-    "symfony/polyfill-util": {
-        "version": "v1.6.0"
-    },
     "symfony/process": {
         "version": "v3.4.3"
     },

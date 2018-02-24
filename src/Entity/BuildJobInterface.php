@@ -5,7 +5,7 @@ namespace App\Entity;
 interface BuildJobInterface
 {
 	const STATUS_PENDING    = 'pending';
-	const STATUS_INPROGRESS = 'in-progress';
+	const STATUS_INPROGRESS = 'progress';
 	const STATUS_DONE       = 'done';
 
 	public function getId();

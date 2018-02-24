@@ -38,9 +38,16 @@ class GitRepositoryValidatorTest extends TestCase
     public function dataValidateRepositoryURL(): array
     {
         return [
-            'https valid'   => ['https://github.com/mamazu/lpg.git', true],
-            'https invalid' => ['https://github.com/mamazu/lpg', false],
-            'ftp invalid'   => ['ftp://github/.com/mamazu/lpg', false],
+            // HTTP
+            'https valid'            => ['https://github.com/mamazu/lpg.git', true],
+            'wrong website'          => ['https://test.com/mamazu/lpg', false],
+            'https invalid trailing' => ['https://github.com/mamazu/lpg/abc', false],
+            'ftp invalid'            => ['ftp://github.com/mamazu/lpg', false],
+
+            // SSH
+            'ssh valid'              => ['git@github.com:mamazu/lpg.git', true],
+            'ssh invalid'            => ['git@github.com/mamazu/lpg', false],
+            'wrong user'             => ['hello@github.com:mamazu/lpg', false],
         ];
     }
 

@@ -51,7 +51,7 @@ class BuildJobStarterCommand extends Command
 		try {
 			$buildJob = $this->getBuildJob($input->getArgument('jobOrCommitId'));
 			if ($buildJob === null) {
-				$output->writeln('info', 'The ci is empty');
+				$output->writeln('The ci is empty');
 			} else {
 				$buildJob->setState(BuildJobInterface::STATUS_INPROGRESS);
 				$this->entityManager->flush();

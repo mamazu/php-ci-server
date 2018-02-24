@@ -23,7 +23,7 @@ class IndexControllerTest extends WebTestCase
 		$crawler = $client->request('GET', '/');
 
 		self::assertEquals(200, $client->getResponse()->getStatusCode());
-		self::assertEquals('manual', $crawler->filterXPath('//div[@class="pannel"]/span')->text());
+		self::assertEquals('manual', $crawler->filterXPath('//div[@class="panel"]/span')->text());
 		self::assertEquals(0, $crawler->filterXPath('//table[@id="buildtable"]/tbody/tr')->count());
 	}
 
@@ -61,7 +61,7 @@ class IndexControllerTest extends WebTestCase
 
 		$cellList = $crawler->filterXPath('//table[@id="buildtable"]/tbody/tr/td');
 		self::assertEquals(200, $statusCode);
-		self::assertEquals('manual', $crawler->filterXPath('//div[@class="pannel"]/span')->text());
+		self::assertEquals('manual', $crawler->filterXPath('//div[@class="panel"]/span')->text());
 		self::assertEquals(2, $crawler->filterXPath('//table[@id="buildtable"]/tbody/tr')->count());
 		self::assertEquals('name', trim($cellList->eq(1)->text()));
 		self::assertEquals('revision', trim($cellList->eq(2)->text()));

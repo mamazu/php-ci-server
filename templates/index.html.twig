@@ -3,7 +3,7 @@
 {% block title %}CI Status page{% endblock %}
 
 {% block body %}
-    <div class="pannel">
+    <div class="panel">
         <h2 style="display:inline; margin-right:1em">Current Status</h2>
         {{ block('cron_status') }}
         <ul>
@@ -14,7 +14,7 @@
         </ul>
     </div>
 
-    <div class="pannel">
+    <div class="panel">
         <h2>Previous Builds</h2>
         {% include 'build_table.html.twig' with build_jobs %}
     </div>

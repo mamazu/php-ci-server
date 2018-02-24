@@ -19,8 +19,8 @@ ul li {
   margin-left: 1em;
 }
 
-/** Styling the pannel */
-div.pannel {
+/** Styling the panel */
+div.panel {
   background: rgba(255, 255, 255, 0.2);
   margin: 2em;
   padding: 1em;
@@ -28,8 +28,8 @@ div.pannel {
   border-radius: 1em;
 }
 
-div.pannel h1,
-div.pannel h2 {
+div.panel h1,
+div.panel h2 {
   text-align: center;
   padding: 0.2em 0;
 }

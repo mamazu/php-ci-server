@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: mamazu
@@ -8,10 +9,10 @@
 
 namespace App\Tests\Services\Git;
 
-use App\Exceptions\InvalidRepositoryURLException;
-use App\Services\Git\GitRepositoryValidator;
 use App\Services\VCSRepositoryValidator;
 use PHPUnit\Framework\TestCase;
+use App\Service\Git\GitRepositoryValidator;
+use App\Exception\InvalidRepositoryURLException;
 
 class GitRepositoryValidatorTest extends TestCase
 {
@@ -24,30 +25,40 @@ class GitRepositoryValidatorTest extends TestCase
     }
 
     /** @dataProvider dataValidateRepositoryURL */
-    public function testValidateRepositoryURL(string $repositoryURL, bool $isValid)
+    public function testValidateRepositoryURL(string $repositoryURL)
     {
-        try {
-            $this->gitRepositoryValidator->validateRepositoryURL($repositoryURL);
-        } catch (InvalidRepositoryURLException $exception) {
-            TestCase::assertFalse($isValid, $exception->getMessage());
-            return;
-        }
-        TestCase::assertTrue($isValid, 'A wrong url went through');
+        self::expectException(InvalidRepositoryURLException::class);
+
+        $this->gitRepositoryValidator->validateRepositoryURL($repositoryURL);
     }
 
-    public function dataValidateRepositoryURL(): array
+    public function dataValidateRepositoryURL() : array
     {
         return [
             // HTTP
-            'https valid'            => ['https://github.com/mamazu/lpg.git', true],
-            'wrong website'          => ['https://test.com/mamazu/lpg', false],
-            'https invalid trailing' => ['https://github.com/mamazu/lpg/abc', false],
-            'ftp invalid'            => ['ftp://github.com/mamazu/lpg', false],
+            'wrong website' => ['https://test.com/mamazu/lpg'],
+            'https invalid trailing' => ['https://github.com/mamazu/lpg/abc'],
+            'ftp invalid' => ['ftp://github.com/mamazu/lpg'],
 
             // SSH
-            'ssh valid'              => ['git@github.com:mamazu/lpg.git', true],
-            'ssh invalid'            => ['git@github.com/mamazu/lpg', false],
-            'wrong user'             => ['hello@github.com:mamazu/lpg', false],
+            'ssh invalid' => ['git@github.com/mamazu/lpg'],
+            'wrong user' => ['hello@github.com:mamazu/lpg'],
+        ];
+    }
+
+    /** @dataProvider dataValidRepositoryURL */
+    public function testValidRepositoryURL(string $repositoryURL)
+    {
+        $this->gitRepositoryValidator->validateRepositoryURL($repositoryURL);
+
+        self::assertTrue(true);
+    }
+
+    public function dataValidRepositoryURL() : array
+    {
+        return [
+            'https' => ['https://github.com/mamazu/lpg.git'],
+            'ssh' => ['git@github.com:mamazu/lpg.git'],
         ];
     }
 

@@ -6,7 +6,7 @@ namespace App\Service;
 use App\Exceptions\InvalidRepositoryURLException;
 use App\Exceptions\InvalidRevisionException;
 
-interface VCSRepositoryValidator
+interface VCSRepositoryValidatorInterface
 {
     /**
      * Validates a given url and checks if this a repository. If it is not valid, it throws an error.

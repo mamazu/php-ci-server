@@ -43,7 +43,7 @@ class GitHubWebHookParserTest extends TestCase
 
     public function testGetCloneUrl()
     {
-        $repository = $this->webHookParser->getRepository(<<<JSON
+        $repository = $this->webHookParser->getRepository('
 {
 	"repository": {
 		"name": "something/else",
@@ -53,7 +53,7 @@ class GitHubWebHookParserTest extends TestCase
 		"id": "d26b4e91cfb1475c16e65a3f770d672d926a7ac4"
 	}
 }
-JSON);
+');
         self::assertEquals('https://github.com/something/else.git', $repository->getCloneURL());
         self::assertEquals('something/else', $repository->getName());
         self::assertEquals('d26b4e91cfb1475c16e65a3f770d672d926a7ac4', $repository->getRevisionNumber());

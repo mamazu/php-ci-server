@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class IndexController extends Controller
 {
 
+	/** @var BuildJobRepositoryInterface */
 	private $buildJobRepository;
 
 	public function __construct(BuildJobRepositoryInterface $buildJobRepository)
@@ -17,19 +18,10 @@ class IndexController extends Controller
 		$this->buildJobRepository = $buildJobRepository;
 	}
 
-	public function index(): Response
+	public function index(int $page=1): Response
 	{
-		$allJobs = $this->buildJobRepository->findAll();
-
-		$summary = [];
-		foreach ($allJobs as $buildJob) {
-			/** @var BuildJobInterface $buildJob */
-			$state = $buildJob->getState()->getName();
-			if (!isset($summary[$state])) {
-				$summary[$state] = 0;
-			}
-			$summary[$state]++;
-		}
+		$allJobs = $this->buildJobRepository->getPaged($page, 100);
+		$summary = $this->buildJobRepository->getStateCount();
 
 		return $this->render('index.html.twig', [
 			'summary'    => $summary,

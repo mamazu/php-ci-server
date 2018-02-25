@@ -25,4 +25,27 @@ class BuildJobRepository extends ServiceEntityRepository implements BuildJobRepo
 		});
 		return count($pendingJobs) > 0 ? reset($pendingJobs) : null;
 	}
+
+	public function getPaged(int $page, int $pageSize): array
+	{
+		$queryBuilder = $this->createQueryBuilder('build_job')
+			->setFirstResult($page*$pageSize)
+			->setMaxResults($pageSize);
+
+		return $queryBuilder->getQuery()->getResult();
+	}
+
+	public function getStateCount(): array
+	{
+		$summary = [];
+		foreach ($this->findAll() as $buildJob) {
+			/** @var BuildJobInterface $buildJob */
+			$state = $buildJob->getState()->getName();
+			if (!isset($summary[$state])) {
+				$summary[$state] = 0;
+			}
+			$summary[$state]++;
+		}
+		return $summary;
+	}
 }

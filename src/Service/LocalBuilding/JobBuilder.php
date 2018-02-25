@@ -3,7 +3,10 @@
 namespace App\Service\LocalBuilding;
 
 use App\Entity\BuildJobInterface;
+use App\Entity\BuildState;
+use App\Entity\BuildStateInterface;
 use App\Entity\VCSRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 class JobBuilder implements JobBuilderInterface
@@ -11,15 +14,22 @@ class JobBuilder implements JobBuilderInterface
 	/** @var LocalGitInterface */
 	private $gitInterface;
 
-	public function __construct(LocalGitInterface $gitInterface)
+	/** @var EntityManagerInterface  */
+	private $entityManager;
+
+	public function __construct(LocalGitInterface $gitInterface, EntityManagerInterface $entityManager)
 	{
 		$this->gitInterface = $gitInterface;
+		$this->entityManager = $entityManager;
 	}
 
 	/** {@inheritdoc} */
 	public function build(BuildJobInterface $buildJob) : bool
 	{
 		$this->prepareSourceCode($buildJob->getRepository());
+		$buildJob->setState(new BuildState($buildJob, BuildJobInterface::STATUS_DONE));
+
+		$this->entityManager->flush();
 		return true;
 	}
 

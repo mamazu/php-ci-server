@@ -32,7 +32,7 @@ services:
         arguments: ['abc']
 
     App\Service\LocalBuilding\LocalGit:
-        arguments: ['/home']
+        arguments: ['/var/www/ci/var/downloads']
 
     App\Services\General\VCSValidatorAccumulator:
         calls:

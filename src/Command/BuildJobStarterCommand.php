@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\BuildState;
 use App\Repository\BuildJobRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,7 +54,7 @@ class BuildJobStarterCommand extends Command
 			if ($buildJob === null) {
 				$output->writeln('The ci is empty');
 			} else {
-				$buildJob->setState(BuildJobInterface::STATUS_INPROGRESS);
+				$buildJob->setState(new BuildState($buildJob, BuildJobInterface::STATUS_INPROGRESS));
 				$this->entityManager->flush();
 				$this->jobBuilder->build($buildJob);
 			}

@@ -2,7 +2,9 @@
 
 declare (strict_types = 1);
 
+use App\Entity\BuildJobInterface;
 use App\Service\LocalBuilding\JobBuilderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use App\Service\LocalBuilding\JobBuilder;
 use App\Service\LocalBuilding\LocalGitInterface;
@@ -21,7 +23,8 @@ class JobBuilderTest extends TestCase
 	public function setup()
 	{
 		$this->localGit = self::createMock(LocalGitInterface::class);
-		$this->jobBuilder = new JobBuilder($this->localGit);
+		$entityManager = self::createMock(EntityManagerInterface::class);
+		$this->jobBuilder = new JobBuilder($this->localGit, $entityManager);
 	}
 
 	private function createRepository()
@@ -43,6 +46,7 @@ class JobBuilderTest extends TestCase
 		$buildJob = new BuildJob($repo);
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
+		self::assertEquals(BuildJobInterface::STATUS_DONE , $buildJob->getState()->getName());
 	}
 
 	public function testBuildWithNewRepo()
@@ -53,5 +57,6 @@ class JobBuilderTest extends TestCase
 		$buildJob = new BuildJob($repo);
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
+		self::assertEquals(BuildJobInterface::STATUS_DONE , $buildJob->getState()->getName());
 	}
 }

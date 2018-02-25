@@ -15,7 +15,10 @@ class LocalGit implements LocalGitInterface
 	/** @var CommandExecutorInterface */
 	private $commandExecutor;
 
-	public function __construct(string $rootDir, CommandExecutorInterface $commandExectutor)
+	/** @var Filesystem */
+    private $fileSystem;
+
+    public function __construct(string $rootDir, CommandExecutorInterface $commandExectutor)
 	{
 		$this->rootDir = $rootDir;
 		$this->commandExecutor = $commandExectutor;
@@ -25,11 +28,12 @@ class LocalGit implements LocalGitInterface
 	/** {@inheritdoc} */
 	public function has(VCSRepositoryInterface $repository) : bool
 	{
-		return file_exists($this->getRepositoryDirectory($repository));
+	    $directory = $this->getRepositoryDirectory($repository);
+		return $this->fileSystem->exists($directory);
 	}
 
 	/** {@inheritdoc} */
-	public function createRepositoryDirectory(VCSRepositoryInterface $repository)
+	public function createRepositoryDirectory(VCSRepositoryInterface $repository): void
 	{
 		$this->fileSystem->mkdir($this->getRepositoryDirectory($repository));
 	}
@@ -38,9 +42,11 @@ class LocalGit implements LocalGitInterface
 	public function clone(VCSRepositoryInterface $repository) : bool
 	{
 		$previousDirectory = getcwd();
-		chdir($this->getRepositoryDirectory($repository));
-		$repositoryURL = $repository->getCloneURL();
 
+		$this->createRepositoryDirectory($repository);
+		chdir($this->getRepositoryDirectory($repository));
+
+		$repositoryURL = $repository->getCloneURL();
 		$success = $this->commandExecutor->execute("git clone $repositoryURL .");
 
 		chdir($previousDirectory);

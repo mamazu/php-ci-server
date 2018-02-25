@@ -31,7 +31,7 @@ class BuildJob implements BuildJobInterface
 		}
 	}
 
-	public function getId()
+	public function getId(): ?int
 	{
 		return $this->id;
 	}
@@ -52,14 +52,9 @@ class BuildJob implements BuildJobInterface
 		return $this->states->toArray();
 	}
 
-	public function setState(string $state): bool
+	public function setState(BuildStateInterface $buildState): void
 	{
-		if (!in_array($state, $this->getAllStates())) {
-			return false;
-		}
-
-		$this->states->add(new BuildState($this, $state));
-		return true;
+		$this->states->add($buildState);
 	}
 
 	public function getAllStates(): array

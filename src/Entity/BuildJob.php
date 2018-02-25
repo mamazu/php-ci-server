@@ -26,7 +26,7 @@ class BuildJob implements BuildJobInterface
 	private function initialize()
 	{
 		if ($this->states->count() === 0) {
-			$pendingState = new BuildState($this, BuildJobInterface::STATUS_PENDING);
+			$pendingState = new BuildState($this, BuildStateInterface::STATUS_PENDING);
 			$this->states->add($pendingState);
 		}
 	}
@@ -55,15 +55,6 @@ class BuildJob implements BuildJobInterface
 	public function setState(BuildStateInterface $buildState): void
 	{
 		$this->states->add($buildState);
-	}
-
-	public function getAllStates(): array
-	{
-		return [
-			BuildJobInterface::STATUS_PENDING,
-			BuildJobInterface::STATUS_INPROGRESS,
-			BuildJobInterface::STATUS_DONE
-		];
 	}
 	//endregion
 }

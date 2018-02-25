@@ -4,10 +4,6 @@ namespace App\Entity;
 
 interface BuildJobInterface
 {
-	const STATUS_PENDING    = 'pending';
-	const STATUS_INPROGRESS = 'progress';
-	const STATUS_DONE       = 'done';
-
 	/**
 	 * @return int|null
 	 */

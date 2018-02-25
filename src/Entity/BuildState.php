@@ -51,4 +51,13 @@ class BuildState implements BuildStateInterface
 		return $this->time;
 	}
 
+	public function getAllStates(): array
+	{
+		return [
+			BuildStateInterface::STATUS_PENDING,
+			BuildStateInterface::STATUS_INPROGRESS,
+			BuildStateInterface::STATUS_DONE
+		];
+	}
+
 }

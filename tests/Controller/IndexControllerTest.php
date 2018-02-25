@@ -48,8 +48,8 @@ class IndexControllerTest extends WebTestCase
 	{
 		$client                = $this->setupClient();
 		$this->buildJobObjects = [
-			$this->createBuildJob(BuildJobInterface::STATUS_INPROGRESS),
-			$this->createBuildJob(BuildJobInterface::STATUS_PENDING),
+			$this->createBuildJob(BuildStateInterface::STATUS_INPROGRESS),
+			$this->createBuildJob(BuildStateInterface::STATUS_PENDING),
 		];
 
 		$crawler = $client->request('GET', '/');

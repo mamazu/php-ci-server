@@ -27,7 +27,7 @@ class JobBuilder implements JobBuilderInterface
 	public function build(BuildJobInterface $buildJob) : bool
 	{
 		$this->prepareSourceCode($buildJob->getRepository());
-		$buildJob->setState(new BuildState($buildJob, BuildJobInterface::STATUS_DONE));
+		$buildJob->setState(new BuildState($buildJob, BuildStateInterface::STATUS_DONE));
 
 		$this->entityManager->flush();
 		return true;

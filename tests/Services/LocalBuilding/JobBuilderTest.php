@@ -3,6 +3,7 @@
 declare (strict_types = 1);
 
 use App\Entity\BuildJobInterface;
+use App\Entity\BuildStateInterface;
 use App\Service\LocalBuilding\JobBuilderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +47,7 @@ class JobBuilderTest extends TestCase
 		$buildJob = new BuildJob($repo);
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
-		self::assertEquals(BuildJobInterface::STATUS_DONE , $buildJob->getState()->getName());
+		self::assertEquals(BuildStateInterface::STATUS_DONE, $buildJob->getState()->getName());
 	}
 
 	public function testBuildWithNewRepo()
@@ -57,6 +58,6 @@ class JobBuilderTest extends TestCase
 		$buildJob = new BuildJob($repo);
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
-		self::assertEquals(BuildJobInterface::STATUS_DONE , $buildJob->getState()->getName());
+		self::assertEquals(BuildStateInterface::STATUS_DONE, $buildJob->getState()->getName());
 	}
 }

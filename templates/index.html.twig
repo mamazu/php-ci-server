@@ -8,8 +8,8 @@
         {{ block('cron_status') }}
         <ul>
             {% for status, count in summary %}
-                <li>{{status}}:
-                    {{count}}</li>
+                <li>{{ status }}:
+                    {{ count }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -17,9 +17,24 @@
     <div class="panel">
         <h2>Previous Builds</h2>
         {% include 'build_table.html.twig' with build_jobs %}
+        {{ block('controls') }}
     </div>
 {% endblock body %}
 
-{% block cron_status%}
-    <span style="color:rgb(255, 20, 20)" title="There is no cronjob set up to start the build automatically">manual</span>
+{% block cron_status %}
+    <span style="color:rgb(255, 20, 20)"
+          title="There is no cronjob set up to start the build automatically">manual</span>
+{% endblock %}
+
+{% block controls %}
+    <div style="margin-top: 0.5em;">
+        <div style="display: inline-block; width: 49%;">
+            {% if page > 0 %}
+                <a href="{{ url(route_name, {'page': page - 1}) }}">Previous</a>
+            {% endif %}
+        </div>
+        <div style="display: inline-block; width: 50%; text-align: right">
+            <a href="{{ url(route_name, {'page': page + 1}) }}">Next</a>
+        </div>
+    </div>
 {% endblock %}

@@ -20,12 +20,15 @@ class IndexController extends Controller
 
 	public function index(int $page=1): Response
 	{
+		$page = max($page, 0);
 		$allJobs = $this->buildJobRepository->getPaged($page, 100);
 		$summary = $this->buildJobRepository->getStateCount();
 
 		return $this->render('index.html.twig', [
 			'summary'    => $summary,
-			'build_jobs' => $allJobs
+			'build_jobs' => $allJobs,
+			'route_name' => 'index',
+			'page'       => $page
 		]);
 	}
 }

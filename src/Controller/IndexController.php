@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\BuildJobInterface;
 use App\Repository\BuildJobRepositoryInterface;
+use App\Repository\BuildStateRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,17 +13,24 @@ class IndexController extends Controller
 
 	/** @var BuildJobRepositoryInterface */
 	private $buildJobRepository;
+	/**
+	 * @var BuildStateRepositoryInterface
+	 */
+	private $buildStateRepository;
 
-	public function __construct(BuildJobRepositoryInterface $buildJobRepository)
-	{
-		$this->buildJobRepository = $buildJobRepository;
+	public function __construct(
+		BuildJobRepositoryInterface $buildJobRepository,
+		BuildStateRepositoryInterface $buildStateRepository
+	) {
+		$this->buildJobRepository   = $buildJobRepository;
+		$this->buildStateRepository = $buildStateRepository;
 	}
 
-	public function index(int $page=1): Response
+	public function index(string $page = '1'): Response
 	{
-		$page = max($page, 0);
+		$page    = max(intval($page), 0);
 		$allJobs = $this->buildJobRepository->getPaged($page, 100);
-		$summary = $this->buildJobRepository->getStateCount();
+		$summary = $this->buildStateRepository->getSummary();
 
 		return $this->render('index.html.twig', [
 			'summary'    => $summary,

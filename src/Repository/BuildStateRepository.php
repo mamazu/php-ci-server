@@ -12,6 +12,7 @@ namespace App\Repository;
 use App\Entity\BuildState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\DBALException;
 
 class BuildStateRepository extends ServiceEntityRepository implements BuildStateRepositoryInterface
 {
@@ -22,17 +23,21 @@ class BuildStateRepository extends ServiceEntityRepository implements BuildState
 
 	public function getSummary(): array
 	{
-		$connection = $this->_em->getConnection();
-		$query = $connection->query('<<<SQL
+		$queryString = '
 SELECT * FROM 
-	(SELECT build_job_id, MAX(time) AS \'m_time\' FROM build_state GROUP BY build_job_id) t 
+	(SELECT build_job_id, MAX(time) AS "m_time" FROM build_state GROUP BY build_job_id) t 
 RIGHT JOIN build_state 
 	ON t.build_job_id = build_state.build_job_id AND t.m_time = build_state.time 
-WHERE t.build_job_id IS NOT NULL;
-SQL
-');
+WHERE t.build_job_id IS NOT NULL;';
+
+		try {
+		$connection = $this->_em->getConnection();
+			$query = $connection->query($queryString);
 		$query->execute();
 		$result = $query->fetchAll();
+		} catch (DBALException $e) {
+			return [];
+		}
 
 		$summary = [];
 		foreach($result as $row){

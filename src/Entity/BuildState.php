@@ -56,7 +56,8 @@ class BuildState implements BuildStateInterface
 		return [
 			BuildStateInterface::STATUS_PENDING,
 			BuildStateInterface::STATUS_INPROGRESS,
-			BuildStateInterface::STATUS_DONE
+			BuildStateInterface::STATUS_DONE,
+			BuildStateInterface::STATUS_CANCELED,
 		];
 	}
 

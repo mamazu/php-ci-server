@@ -1,6 +1,13 @@
 index:
+    path: /
+    defaults: { _controller: 'App\Controller\BuildJobController::index' }
+index:
     path: /{page}
-    defaults: { _controller: 'App\Controller\IndexController::index' }
+    defaults: { _controller: 'App\Controller\BuildJobController::index' }
+
+cancel_buildjob:
+    path: /{buildJob}/cancel
+    defaults: { _controller: 'App\Controller\BuildJobController::cancelJob'}
 
 githubHook:
     path: /github_webhook

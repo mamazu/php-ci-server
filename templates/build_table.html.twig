@@ -20,7 +20,7 @@
     {% if build_job.isDone() %}
         <a href="#">Output</a>
     {% else %}
-        <a href="#">Cancel</a>
+        <a href="{{ path('cancel_buildjob', {'buildJob': build_job.id}) }}">Cancel</a>
     {% endif %}
 {% endmacro %}
 

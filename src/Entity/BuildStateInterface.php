@@ -10,6 +10,7 @@ interface BuildStateInterface
 	const STATUS_PENDING    = 'pending';
 	const STATUS_INPROGRESS = 'progress';
 	const STATUS_DONE       = 'done';
+	const STATUS_CANCELED   = 'cancel';
 
 	/**
 	 * @return int|null

@@ -13,6 +13,7 @@ class IndexController extends Controller
 
 	/** @var BuildJobRepositoryInterface */
 	private $buildJobRepository;
+	
 	/**
 	 * @var BuildStateRepositoryInterface
 	 */
@@ -28,13 +29,11 @@ class IndexController extends Controller
 
 	public function index(string $page = '1'): Response
 	{
-		$page    = max(intval($page), 0);
-		$allJobs = $this->buildJobRepository->getPaged($page, 100);
-		$summary = $this->buildStateRepository->getSummary();
+		$page = max(intval($page), 0);
 
 		return $this->render('index.html.twig', [
-			'summary'    => $summary,
-			'build_jobs' => $allJobs,
+			'summary'    => $this->buildStateRepository->getSummary(),
+			'build_jobs' => $this->buildJobRepository->getPaged($page, 100),
 			'route_name' => 'index',
 			'page'       => $page
 		]);

@@ -16,8 +16,12 @@
        target="_blank">{{ repository.revisionNumber }}</a>
 {% endmacro %}
 
-{% macro build_cancel_link(build_job) %}
-    <a href="#">Cancel</a>
+{% macro build_link(build_job) %}
+    {% if build_job.isDone() %}
+        <a href="#">Output</a>
+    {% else %}
+        <a href="#">Cancel</a>
+    {% endif %}
 {% endmacro %}
 
 {% import _self as table %}
@@ -40,7 +44,7 @@
             <td>{{ table.build_commit_link(build_job.repository) }}</td>
             <td>{{ table.print_build_state(build_job.states) }}</td>
             <td class="job_cancel">
-                {{ table.build_cancel_link(build_job.id) }}
+                {{ table.build_link(build_job) }}
             </td>
         </tr>
     {% endfor %}

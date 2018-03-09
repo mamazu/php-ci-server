@@ -5,7 +5,9 @@
             <id name="id" type="integer" column="id">
                   <generator strategy="AUTO"/>
             </id>
-            <one-to-one field="repository" target-entity="App\Entity\VCSRepository" />
+            <one-to-one field="repository" target-entity="App\Entity\VCSRepository" fetch="EAGER">
+                  <cascade><cascade-persist/></cascade>
+            </one-to-one>
             <one-to-many field="states" target-entity="App\Entity\BuildState" mapped-by="buildJob">
                   <cascade>
                         <cascade-persist />

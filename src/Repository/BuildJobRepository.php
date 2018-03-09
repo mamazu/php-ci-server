@@ -7,7 +7,6 @@ use App\Entity\BuildJobInterface;
 use App\Entity\BuildStateInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Doctrine\ORM\EntityNotFoundException;
 
 class BuildJobRepository extends ServiceEntityRepository implements BuildJobRepositoryInterface
 {

@@ -56,5 +56,10 @@ class BuildJob implements BuildJobInterface
 	{
 		$this->states->add($buildState);
 	}
+
+	public function isDone(): bool
+	{
+		return $this->getState()->getName() === BuildStateInterface::STATUS_DONE;
+	}
 	//endregion
 }

@@ -11,7 +11,7 @@ use App\Repository\BuildJobRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class IndexControllerTest extends WebTestCase
+class BuildJobControllerTest extends WebTestCase
 {
 	/** @var BuildJobInterface[] */
 	private $buildJobObjects = [];
@@ -37,6 +37,9 @@ class IndexControllerTest extends WebTestCase
 		$buildJobObjects = &$this->buildJobObjects;
 		$buildJobRepo->method('findAll')->willReturnCallback(function () use ($buildJobObjects) : array {
 			return $this->buildJobObjects;
+		});
+		$buildJobRepo->method('getPaged')->willReturnCallback(function ($page, $pageSize) {
+			return array_slice($this->buildJobObjects, 0, $pageSize);
 		});
 
 		$container->set('App\\Repository\\BuildJobRepository', $buildJobRepo);
@@ -69,16 +72,24 @@ class IndexControllerTest extends WebTestCase
 
 	private function createBuildJob(string $state): BuildJobInterface
 	{
-		$buildJob = self::createMock(BuildJobInterface::class);
+		$buildState = self::createConfiguredMock(BuildStateInterface::class, ['getName' => $state]);
 
-		$buildState = self::createMock(BuildStateInterface::class);
+		$repository = self::createConfiguredMock(
+			VCSRepositoryInterface::class,
+			[
+				'getName'     => 'name',
+				'getRevisionNumber' => 'revision'
+			]
+		);
 
-		$repository = self::createMock(VCSRepositoryInterface::class);
-		$repository->method('getName')->willReturn('name');
-		$repository->method('getRevisionNumber')->willReturn('revision');
-
-		$buildJob->method('getState')->willReturn($buildState);
-		$buildJob->method('getRepository')->willReturn($repository);
+		$buildJob = self::createConfiguredMock(
+			BuildJobInterface::class,
+			[
+				'getState'      => $buildState,
+				'getRepository' => $repository,
+				'isDone'        => $state === BuildStateInterface::STATUS_DONE
+			]
+		);
 
 		return $buildJob;
 	}

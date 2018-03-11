@@ -30,4 +30,9 @@ interface BuildJobInterface
 	 * @param BuildStateInterface $state
 	 */
 	public function setState(BuildStateInterface $state): void;
+
+	/**
+	 * @return bool
+	 */
+	public function isDone(): bool;
 }

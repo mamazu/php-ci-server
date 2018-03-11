@@ -1,14 +1,26 @@
-index:
+# Build job controller
+
+list_buildjobs:
     path: /
-    defaults: { _controller: 'App\Controller\BuildJobController::index' }
-index:
+    defaults: { _controller: 'App\Controller\BuildJobController::list' }
+list_buildjobs:
     path: /{page}
-    defaults: { _controller: 'App\Controller\BuildJobController::index' }
+    defaults: { _controller: 'App\Controller\BuildJobController::list' }
 
 cancel_buildjob:
     path: /{buildJob}/cancel
     defaults: { _controller: 'App\Controller\BuildJobController::cancelJob'}
 
+show_buildjob:
+    path: /{buildJob}/index
+    defaults: { _controller: 'App\Controller\BuildJobController::show'}
+
+# Log file controller
+show_logfile:
+    path: /{buildJobId}/log
+    defaults: { _controller: 'App\Controller\LogFileController::show'}
+
+# Github controller
 githubHook:
     path: /github_webhook
     defaults: { _controller: 'App\Controller\GithubController::githubHook' }

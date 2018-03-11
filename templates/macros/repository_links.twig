@@ -1,0 +1,12 @@
+{% macro build_repo_link(repository, label) %}
+    <a href="https://github.com/{{ repository.name }}" target="_blank">
+        {{ label|default(repository.name) }}
+    </a>
+{% endmacro %}
+
+{% macro build_commit_link(repository, label) %}
+    <a href="https://github.com/{{ repository.name }}/commit/{{ repository.revisionNumber }}"
+       target="_blank">
+        {{ label|default(repository.revisionNumber) }}
+    </a>
+{% endmacro %}

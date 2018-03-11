@@ -18,6 +18,9 @@ class BuildJob implements BuildJobInterface
 	/** @var string */
 	private $creator;
 
+	/** @var LogFile */
+	private $logFile;
+
 	public function __construct(VCSRepositoryInterface $repository, string $creator)
 	{
 		$this->repository = $repository;
@@ -80,5 +83,15 @@ class BuildJob implements BuildJobInterface
 	public function getCreator(): string
 	{
 		return $this->creator;
+	}
+
+	public function getLogFile(): ?LogFile
+	{
+		return $this->logFile;
+	}
+
+	public function addLogFile(LogFile $file): void
+	{
+		$this->logFile = $file;
 	}
 }

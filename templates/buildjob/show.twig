@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/repository_links.twig' as links %}
+
+{% block title %}Buildjob for {{ buildjob.repository.name }}{% endblock %}
+
+{% block body %}
+<div class="panel">
+    <h2>General information</h2>
+    <p>State: {{ buildjob.state.name }}</p>
+    <p>Created by: {{ buildjob.creator }}</p>
+    <p>Revision link: {{ links.build_commit_link(buildjob.repository, 'Link to code') }}</p>
+</div>
+
+<div class="panel">
+    <h2>Log file</h2>
+    <code>
+    {{ buildjob.logfile.content|default('Waiting to be processed...') }}
+    </code>
+</div>
+{% endblock %}

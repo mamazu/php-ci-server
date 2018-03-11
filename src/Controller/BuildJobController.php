@@ -33,14 +33,14 @@ class BuildJobController extends Controller
 		$this->entityManager        = $entityManager;
 	}
 
-	public function index(string $page = '0'): Response
+	public function list(string $page = '0'): Response
 	{
 		$page = max(intval($page), 0);
 
-		return $this->render('buildjob/index.html.twig', [
+		return $this->render('buildjob/list.twig', [
 			'summary'    => $this->buildStateRepository->getSummary(),
 			'build_jobs' => $this->buildJobRepository->getPaged($page, 100),
-			'route_name' => 'index',
+			'route_name' => 'list_buildjobs',
 			'page'       => $page
 		]);
 	}
@@ -51,6 +51,10 @@ class BuildJobController extends Controller
 		$buildJob->setState($buildState);
 		$this->entityManager->flush();
 
-		return $this->redirect($this->generateUrl('index'));
+		return $this->redirect($this->generateUrl('list_buildjobs'));
+	}
+
+	public function show(BuildJob $buildJob){
+		return $this->render('buildjob/show.twig', ['buildjob' => $buildJob]);
 	}
 }

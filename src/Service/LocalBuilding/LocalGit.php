@@ -1,5 +1,5 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace App\Service\LocalBuilding;
 
@@ -16,19 +16,22 @@ class LocalGit implements LocalGitInterface
 	private $commandExecutor;
 
 	/** @var Filesystem */
-    private $fileSystem;
+	private $fileSystem;
 
-    public function __construct(string $rootDir, CommandExecutorInterface $commandExectutor)
-	{
-		$this->rootDir = $rootDir;
+	public function __construct(
+		string $rootDir,
+		CommandExecutorInterface $commandExectutor,
+		?Filesystem $filesystem = null
+	) {
+		$this->rootDir         = $rootDir;
 		$this->commandExecutor = $commandExectutor;
-		$this->fileSystem = new FileSystem();
+		$this->fileSystem      = $filesystem ?? new Filesystem();
 	}
 
 	/** {@inheritdoc} */
-	public function has(VCSRepositoryInterface $repository) : bool
+	public function has(VCSRepositoryInterface $repository): bool
 	{
-	    $directory = $this->getRepositoryDirectory($repository);
+		$directory = $this->getRepositoryDirectory($repository);
 		return $this->fileSystem->exists($directory);
 	}
 
@@ -39,45 +42,51 @@ class LocalGit implements LocalGitInterface
 	}
 
 	/** {@inheritdoc} */
-	public function clone(VCSRepositoryInterface $repository) : bool
+	public function clone(VCSRepositoryInterface $repository): bool
 	{
-		$previousDirectory = getcwd();
-
 		$this->createRepositoryDirectory($repository);
-		chdir($this->getRepositoryDirectory($repository));
 
 		$repositoryURL = $repository->getCloneURL();
-		$success = $this->commandExecutor->execute("git clone $repositoryURL .");
 
-		chdir($previousDirectory);
-		return $success;
+		return $this->executeInRepositoryDirectory($repository, "git clone $repositoryURL .");
 	}
 
 	/** {@inheritdoc} */
-	public function fetch(VCSRepositoryInterface $repository) : bool
+	public function fetch(VCSRepositoryInterface $repository): bool
 	{
-		$previousDirectory = getcwd();
-		chdir($this->getRepositoryDirectory($repository));
-
-		$success = $this->commandExecutor->execute("git fetch -a");
-
-		chdir($previousDirectory);
-		return $success;
+		return $this->executeInRepositoryDirectory($repository, "git fetch -a");
 	}
 
-	public function checkout(VCSRepositoryInterface $repository) : bool
+	public function checkout(VCSRepositoryInterface $repository): bool
 	{
-		$previousDirectory = getcwd();
-		chdir($this->getRepositoryDirectory($repository));
 		$revisionNumber = $repository->getRevisionNumber();
 
-		$success = $this->commandExecutor->execute("git checkout $revisionNumber");
+		return $this->executeInRepositoryDirectory($repository, "git checkout $revisionNumber");
+	}
 
-		chdir($previousDirectory);
+	/**
+	 * Executes a command in the repository directory and switches back to the directory it was in.
+	 *
+	 * @param VCSRepositoryInterface $repository
+	 * @param string                 $command
+	 *
+	 * @return bool
+	 */
+	private function executeInRepositoryDirectory(VCSRepositoryInterface $repository, string $command): bool
+	{
+		$directory = $this->getRepositoryDirectory($repository);
+
+		$previousDirectory = $this->commandExecutor->getWorkingDirectory();
+
+		$this->commandExecutor->setWorkingDirectory($directory);
+		$success = $this->commandExecutor->execute($command);
+
+		$this->commandExecutor->setWorkingDirectory($previousDirectory);
+
 		return $success;
 	}
 
-	private function getRepositoryDirectory(VCSRepositoryInterface $repository) : string
+	private function getRepositoryDirectory(VCSRepositoryInterface $repository): string
 	{
 		$repositoryName = $repository->getName();
 

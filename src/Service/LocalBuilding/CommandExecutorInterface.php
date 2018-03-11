@@ -44,4 +44,16 @@ interface CommandExecutorInterface
 	 * @return array
 	 */
 	public function getLastOutput() : array;
+
+	/**
+	 * Changes the working directory
+	 *
+	 * @param string $directory
+	 */
+	public function setWorkingDirectory(string $directory): void;
+
+	/**
+	 * @return string
+	 */
+	public function getWorkingDirectory(): string;
 }

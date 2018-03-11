@@ -17,9 +17,6 @@ class LocalGitTest extends TestCase
 	/** @var Filesystem */
 	private $fileSystem;
 
-	/** @var string */
-	private $baseDir;
-
 	/** @var VCSRepositoryInterface */
 	private $repository;
 
@@ -27,31 +24,33 @@ class LocalGitTest extends TestCase
 	private $commandExecutor;
 
 	/** @var array */
-	private $data = [];
+	private $createdDirectories = [];
 
 	public function setUp()
 	{
 		$baseDir = __DIR__ . '/../../test_data';
 
-		$this->fileSystem = self::createMock(FileSystem::class);
-
 		$this->repository = self::createMock(VCSRepositoryInterface::class);
 		$this->commandExecutor = self::createMock(CommandExecutorInterface::class);
 
-		$this->localGit = new LocalGit($baseDir, $this->commandExecutor, $this->fileSystem);
+		$this->setupFileSystem();
 
-		$this->setupFileSystem($baseDir);
+		$this->localGit = new LocalGit($baseDir, $this->commandExecutor, $this->fileSystem);
 	}
 
-	private function setupFileSystem(string $baseDir)
+	private function setupFileSystem()
 	{
-		$fileSystem = new FileSystem();
+		$this->fileSystem = self::getMockBuilder(Filesystem::class)->disableProxyingToOriginalMethods()->getMock();
 
-		if ($fileSystem->exists($baseDir)) {
-			$fileSystem->remove($baseDir);
-		}
-
-		$this->fileSystem->mkdir($baseDir);
+		$this->fileSystem->method('exists')->willReturnCallback(function (string $file) {
+			return in_array($file, $this->createdDirectories);
+		});
+		$this->fileSystem->method('remove')->willReturnCallback(function (string $directory) {
+			unset($this->createdDirectories[$directory]);
+		});
+		$this->fileSystem->method('mkdir')->willReturnCallback(function (string $directory) {
+			$this->createdDirectories[] = $directory;
+		});
 	}
 
 	private function setupRepository(string $name)

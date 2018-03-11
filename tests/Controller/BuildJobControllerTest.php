@@ -77,7 +77,7 @@ class BuildJobControllerTest extends WebTestCase
 		$repository = self::createConfiguredMock(
 			VCSRepositoryInterface::class,
 			[
-				'getName'     => 'name',
+				'getName'           => 'name',
 				'getRevisionNumber' => 'revision'
 			]
 		);
@@ -88,7 +88,8 @@ class BuildJobControllerTest extends WebTestCase
 				'getState'      => $buildState,
 				'getRepository' => $repository,
 				'isDone'        => $state === BuildStateInterface::STATUS_DONE,
-				'isCanceled'    => $state === BuildStateInterface::STATUS_CANCELED
+				'isCanceled'    => $state === BuildStateInterface::STATUS_CANCELED,
+				'getCreator'    => 'test'
 			]
 		);
 

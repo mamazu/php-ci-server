@@ -46,7 +46,10 @@
             <td>{{ build_job.id }}</td>
             <td>{{ table.build_repo_link(build_job.repository) }}</td>
             <td>{{ table.build_commit_link(build_job.repository) }}</td>
-            <td>{{ table.print_build_state(build_job.states) }}</td>
+            <td>
+                <p style="font-weight: bold;">Created by: {{ build_job.creator }}</p>
+                {{ table.print_build_state(build_job.states) }}
+            </td>
             <td class="job_cancel">
                 {{ table.build_link(build_job) }}
             </td>

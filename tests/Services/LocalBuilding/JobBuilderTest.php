@@ -44,7 +44,7 @@ class JobBuilderTest extends TestCase
 		$this->localGit->method('has')->willReturn(true);
 
 		$repo = $this->createRepository();
-		$buildJob = new BuildJob($repo);
+		$buildJob = new BuildJob($repo, 'test');
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
 		self::assertEquals(BuildStateInterface::STATUS_DONE, $buildJob->getState()->getName());
@@ -55,7 +55,7 @@ class JobBuilderTest extends TestCase
 		$this->localGit->method('has')->willReturn(false);
 
 		$repo = $this->createRepository();
-		$buildJob = new BuildJob($repo);
+		$buildJob = new BuildJob($repo, 'test');
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
 		self::assertEquals(BuildStateInterface::STATUS_DONE, $buildJob->getState()->getName());

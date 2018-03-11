@@ -40,4 +40,14 @@ interface BuildJobInterface
 	 * @return bool
 	 */
 	public function isCanceled(): bool;
+
+	/**
+	 * @return string
+	 */
+	public function getCreator(): string;
+
+	/**
+	 * @param string $creator
+	 */
+	public function setCreator(string $creator): void;
 }

@@ -61,7 +61,7 @@ class GithubController extends Controller
 		try {
 			$repository = $this->githubWebHookParser->getRepository($payload);
 
-			$newJob = new BuildJob($repository);
+			$newJob = new BuildJob($repository, 'github');
 			$this->entityManager->persist($newJob);
 			$this->entityManager->flush();
 			return true;

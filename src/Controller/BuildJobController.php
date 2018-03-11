@@ -37,7 +37,7 @@ class BuildJobController extends Controller
 	{
 		$page = max(intval($page), 0);
 
-		return $this->render('index.html.twig', [
+		return $this->render('buildjob/index.html.twig', [
 			'summary'    => $this->buildStateRepository->getSummary(),
 			'build_jobs' => $this->buildJobRepository->getPaged($page, 100),
 			'route_name' => 'index',

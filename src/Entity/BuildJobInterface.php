@@ -35,4 +35,9 @@ interface BuildJobInterface
 	 * @return bool
 	 */
 	public function isDone(): bool;
+
+	/**
+	 * @return bool
+	 */
+	public function isCanceled(): bool;
 }

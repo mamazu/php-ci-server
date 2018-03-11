@@ -61,5 +61,10 @@ class BuildJob implements BuildJobInterface
 	{
 		return $this->getState()->getName() === BuildStateInterface::STATUS_DONE;
 	}
+
+	public function isCanceled(): bool
+	{
+		return $this->getState()->getName() === BuildStateInterface::STATUS_CANCELED;
+	}
 	//endregion
 }

@@ -87,7 +87,8 @@ class BuildJobControllerTest extends WebTestCase
 			[
 				'getState'      => $buildState,
 				'getRepository' => $repository,
-				'isDone'        => $state === BuildStateInterface::STATUS_DONE
+				'isDone'        => $state === BuildStateInterface::STATUS_DONE,
+				'isCanceled'    => $state === BuildStateInterface::STATUS_CANCELED
 			]
 		);
 

@@ -19,9 +19,13 @@
 {% macro build_link(build_job) %}
     {% if build_job.isDone() %}
         <a href="#">Output</a>
-    {% else %}
+    {% elseif not build_job.isCanceled() %}
+        {{ build_job.isCanceled() }}
         <a href="{{ path('cancel_buildjob', {'buildJob': build_job.id}) }}">Cancel</a>
+    {% else %}
+        Canceled
     {% endif %}
+
 {% endmacro %}
 
 {% import _self as table %}
@@ -33,7 +37,7 @@
         <th>Repository</th>
         <th>Commit-ID</th>
         <th>Status</th>
-        <th>Cancel</th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>

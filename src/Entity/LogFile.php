@@ -46,8 +46,9 @@ class LogFile implements LogFileInterface
 	public function getContent(): string
 	{
 		$content = stream_get_contents($this->content);
-		if(is_bool($content))
+		if (is_bool($content)) {
 			throw new Exception('Could not get log file content');
+		}
 
 		return $content;
 	}
@@ -73,4 +74,8 @@ class LogFile implements LogFileInterface
 		return $this->buildJob;
 	}
 
+	public function append(string $content): void
+	{
+		$this->content = $this->getContent() . $content;
+	}
 }

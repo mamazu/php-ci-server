@@ -50,4 +50,16 @@ interface BuildJobInterface
 	 * @param string $creator
 	 */
 	public function setCreator(string $creator): void;
+
+	/**
+	 * @return LogFile|null
+	 */
+	public function getLogFile(): ?LogFile;
+
+	/**
+	 * @param LogFile $logFile
+	 *
+	 * @return string
+	 */
+	public function addLogFile(LogFile $logFile): void;
 }

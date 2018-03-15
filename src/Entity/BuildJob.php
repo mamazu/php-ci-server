@@ -24,7 +24,7 @@ class BuildJob implements BuildJobInterface
 	public function __construct(VCSRepositoryInterface $repository, string $creator)
 	{
 		$this->repository = $repository;
-		$this->creator = $creator;
+		$this->creator    = $creator;
 
 		$this->states = new ArrayCollection();
 		$this->initialize();
@@ -73,6 +73,12 @@ class BuildJob implements BuildJobInterface
 	{
 		return $this->getState()->getName() === BuildStateInterface::STATUS_CANCELED;
 	}
+
+	public function setStateFromString(string $statusString): void
+	{
+		$this->setState(new BuildState($this, $statusString));
+	}
+
 	//endregion
 
 	public function setCreator(string $creator): void
@@ -93,5 +99,10 @@ class BuildJob implements BuildJobInterface
 	public function addLogFile(LogFile $file): void
 	{
 		$this->logFile = $file;
+	}
+
+	public function setId(?int $id): void
+	{
+		$this->id = $id;
 	}
 }

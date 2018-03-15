@@ -62,4 +62,9 @@ interface BuildJobInterface
 	 * @return string
 	 */
 	public function addLogFile(LogFile $logFile): void;
+
+	/**
+	 * @param string $statusString
+	 */
+	public function setStateFromString(string $statusString): void;
 }

@@ -45,6 +45,10 @@ class LogFile implements LogFileInterface
 	 */
 	public function getContent(): string
 	{
+		if (is_string($this->content)) {
+			return $this->content;
+		}
+
 		$content = stream_get_contents($this->content);
 		if (is_bool($content)) {
 			throw new Exception('Could not get log file content');

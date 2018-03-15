@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare (strict_types=1);
 
 use App\Entity\BuildJobInterface;
 use App\Entity\BuildStateInterface;
@@ -23,8 +23,8 @@ class JobBuilderTest extends TestCase
 
 	public function setup()
 	{
-		$this->localGit = self::createMock(LocalGitInterface::class);
-		$entityManager = self::createMock(EntityManagerInterface::class);
+		$this->localGit   = self::createMock(LocalGitInterface::class);
+		$entityManager    = self::createMock(EntityManagerInterface::class);
 		$this->jobBuilder = new JobBuilder($this->localGit, $entityManager);
 	}
 
@@ -43,7 +43,7 @@ class JobBuilderTest extends TestCase
 	{
 		$this->localGit->method('has')->willReturn(true);
 
-		$repo = $this->createRepository();
+		$repo     = $this->createRepository();
 		$buildJob = new BuildJob($repo, 'test');
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
@@ -54,10 +54,12 @@ class JobBuilderTest extends TestCase
 	{
 		$this->localGit->method('has')->willReturn(false);
 
-		$repo = $this->createRepository();
+		$repo     = $this->createRepository();
 		$buildJob = new BuildJob($repo, 'test');
+		$buildJob->setId(1);
 
 		self::assertTrue($this->jobBuilder->build($buildJob));
 		self::assertEquals(BuildStateInterface::STATUS_DONE, $buildJob->getState()->getName());
+		self::assertEquals('Starting buildjob 1', $buildJob->getLogFile()->getContent());
 	}
 }

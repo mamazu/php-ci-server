@@ -7,6 +7,7 @@ use App\Entity\BuildState;
 use App\Entity\BuildStateInterface;
 use App\Entity\LogFile;
 use App\Entity\VCSRepositoryInterface;
+use App\Factory\BuildStateFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -18,8 +19,11 @@ class JobBuilder implements JobBuilderInterface
 	/** @var EntityManagerInterface */
 	private $entityManager;
 
-	public function __construct(LocalGitInterface $gitInterface, EntityManagerInterface $entityManager)
-	{
+
+	public function __construct(
+		LocalGitInterface $gitInterface,
+		EntityManagerInterface $entityManager
+	) {
 		$this->gitInterface  = $gitInterface;
 		$this->entityManager = $entityManager;
 	}
@@ -27,17 +31,23 @@ class JobBuilder implements JobBuilderInterface
 	/** {@inheritdoc} */
 	public function build(BuildJobInterface $buildJob): bool
 	{
+		// SETUP
+		$buildJob->setStateFromString(BuildStateInterface::STATUS_INPROGRESS);
 		$this->prepareSourceCode($buildJob->getRepository());
-		$buildJob->setState(new BuildState($buildJob, BuildStateInterface::STATUS_INPROGRESS));
 
+		// EXECUTE
 		$logContent = $this->executeCode($buildJob);
-		$logFile    = $buildJob->getLogFile();
+		$buildJob->setStateFromString(BuildStateInterface::STATUS_DONE);
+
+		// Log the result
+		$logFile = $buildJob->getLogFile();
 		if ($logFile === null) {
 			$buildJob->addLogFile(new LogFile($logContent));
 		} else {
 			$logFile->append($logContent);
 		}
 
+		// Save to database
 		$this->entityManager->flush();
 		return true;
 	}
@@ -62,6 +72,8 @@ class JobBuilder implements JobBuilderInterface
 
 	private function executeCode(BuildJobInterface $buildJob): string
 	{
-		return '';
+		$output = 'Starting buildjob ' . $buildJob->getId();
+		echo $output;
+		return $output;
 	}
 }
